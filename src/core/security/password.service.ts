@@ -29,6 +29,23 @@ function scryptAsync(
 /** Формат хэша: scrypt$N$r$p$salt(b64)$hash(b64) — параметры можно менять без миграции. */
 @Injectable()
 export class PasswordService {
+	/**
+	 * Хэш в правильном формате, который заведомо не совпадёт ни с одним паролем,
+	 * но проверяется ровно столько же времени.
+	 *
+	 * Нужен при входе: если для несуществующего email сразу отвечать «неверные
+	 * данные», не считая scrypt, ответ придёт на ~100 мс быстрее — и по этой
+	 * разнице можно перебирать, какие адреса зарегистрированы.
+	 */
+	readonly dummyHash: string = [
+		'scrypt',
+		N,
+		R,
+		P,
+		randomBytes(SALT_LENGTH).toString('base64'),
+		randomBytes(KEY_LENGTH).toString('base64'),
+	].join('$');
+
 	async hash(password: string): Promise<string> {
 		const salt = randomBytes(SALT_LENGTH);
 		const key = await scryptAsync(password, salt, {

@@ -20,7 +20,6 @@ export class ChannelUseCase {
     private readonly media: MediaConfigService,
   ) {}
 
-  /** Выдаёт новый ключ, старый перестаёт работать. */
   async resetStreamKey(userId: string): Promise<StreamKeyResponse> {
     const channel = await this.dataService.channel.findByStreamerId(userId);
     if (channel === null) throw new NotFoundException("Channel not found");
@@ -46,8 +45,6 @@ export class ChannelUseCase {
     try {
       key = decryptStreamKey(channel.streamHashKey);
     } catch {
-      // Почти всегда это смена STREAM_KEY_SECRET: старые ключи больше не читаются.
-      // Предлагаем сбросить, а не притворяемся, что ключа нет.
       throw new ConflictException(
         "Stream key cannot be decrypted, reset it to get a new one",
       );
@@ -59,8 +56,6 @@ export class ChannelUseCase {
   private format(channelId: string, key: string): StreamKeyResponse {
     return {
       server: this.media.rtmpUrl,
-      // channelId — это путь публикации, key улетает строкой запроса:
-      // именно её MediaMTX передаёт в /stream/auth как query.
       streamKey: `${channelId}?key=${key}`,
       playbackUrl: this.media.hlsPlaybackUrl(channelId),
     };

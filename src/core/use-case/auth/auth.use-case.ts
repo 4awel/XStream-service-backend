@@ -7,6 +7,7 @@ import {
   Logger,
   NotFoundException,
   ServiceUnavailableException,
+  UnauthorizedException,
 } from "@nestjs/common";
 import { randomBytes } from "node:crypto";
 
@@ -17,6 +18,7 @@ import { PasswordService } from "@/core/security/password.service";
 import { RateLimitService } from "@/core/security/rate-limit.service";
 import { VerificationCodeService } from "@/core/security/verification-code.service";
 import { ChangePasswordDto, StatusMessage } from "@/core/use-case/auth/index";
+import { LoginDto } from "@/core/auth/dto/login.dto";
 
 const CODE_TTL_MS = 10 * 60 * 1000;
 const MAX_CODE_ATTEMPTS = 5;
@@ -27,6 +29,7 @@ const USERNAME_RETRIES = 5;
 const REGISTER_MESSAGE =
   "If this email can be registered, a verification code has been sent";
 const INVALID_CODE_MESSAGE = "Invalid or expired verification code";
+const INVALID_CREDENTIALS_MESSAGE = "Invalid email or password";
 
 @Injectable()
 export class AuthUseCase {
@@ -103,7 +106,6 @@ export class AuthUseCase {
       throw new BadRequestException(INVALID_CODE_MESSAGE);
     }
 
-    // одноразовость: код "сгорает" атомарно, второй параллельный запрос не пройдёт
     const consumed = await this.dataService.emailVerification.remove(email);
     if (!consumed) {
       throw new BadRequestException(INVALID_CODE_MESSAGE);
@@ -123,7 +125,6 @@ export class AuthUseCase {
       if (await this.dataService.user.existsByEmail(email)) {
         throw new ConflictException("Registration failed");
       }
-      // иначе занят username — пробуем другой суффикс
     }
     throw new ConflictException("Registration failed");
   }
@@ -145,8 +146,29 @@ export class AuthUseCase {
 
     await this.dataService.user.update({
       id: dto.userId,
-      passwordHash: newHashPassword
+      passwordHash: newHashPassword,
     });
+
+    return user;
+  }
+
+  async login(dto: LoginDto): Promise<User> {
+    await this.rateLimit.consume(`login:email:${dto.email}`, 10, 15 * 60);
+
+    const user = await this.dataService.user.findByEmail(dto.email);
+    const isPasswordValid = await this.passwords.verify(
+      dto.password,
+      user?.password ?? this.passwords.dummyHash,
+    );
+
+    if (!user || !isPasswordValid) {
+      this.logger.log("Failed login attempt");
+      throw new UnauthorizedException(INVALID_CREDENTIALS_MESSAGE);
+    }
+
+    if (user.blocked) {
+      throw new ForbiddenException("Account is blocked");
+    }
 
     return user;
   }

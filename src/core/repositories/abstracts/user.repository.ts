@@ -15,6 +15,9 @@ export abstract class UserRepository {
 
   abstract findById(id: string): Promise<User | null>;
 
+  /** Нужен для входа: email — то, чем пользователь себя называет. */
+  abstract findByEmail(email: string): Promise<User | null>;
+
   abstract findByIdWithChannel(
     userId: string,
   ): Promise<{ user: User; channel: Channel } | null>;

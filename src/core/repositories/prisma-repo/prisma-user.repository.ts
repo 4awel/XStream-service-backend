@@ -93,6 +93,18 @@ export class PrismaUserRepository extends UserRepository {
     return PrismaUserMapper.toEntity(user);
   }
 
+  async findByEmail(email: string): Promise<User | null> {
+    if (!email) return null;
+
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) return null;
+
+    return PrismaUserMapper.toEntity(user);
+  }
+
   async findByIdWithChannel(
     userId: string,
   ): Promise<{ user: User; channel: Channel } | null> {

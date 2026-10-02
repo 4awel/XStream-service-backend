@@ -1,14 +1,12 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Inject,
   Logger,
   Post,
   Req,
-  UnauthorizedException,
 } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
@@ -25,6 +23,7 @@ import {
   RegisterResponse,
   VerifyEmailDto,
 } from "@/core/auth/dto/auth.dto";
+import { startSession } from "@/core/auth/session.util";
 import { RateLimitService } from "@/core/security/rate-limit.service";
 import { AuthUseCase } from "@/core/use-case/auth/auth.use-case";
 
@@ -75,14 +74,7 @@ export class AuthController {
 
     const user = await this.authUseCase.verifyEmail(dto.email, dto.code);
 
-    // новый id сессии после входа — защита от session fixation
-    await new Promise<void>((resolve, reject) =>
-      req.session.regenerate((err) => (err ? reject(err) : resolve())),
-    );
-    req.session.userId = user.id;
-    await new Promise<void>((resolve, reject) =>
-      req.session.save((err) => (err ? reject(err) : resolve())),
-    );
+    await startSession(req, user.id);
 
     return { status: 200, message: "Account created" };
   }
