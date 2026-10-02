@@ -1,0 +1,53 @@
+# MediaMTX — PROD. Бэкенд живёт в том же compose-стеке под именем api,
+# поэтому обращаемся к нему по имени сервиса, а не через host.docker.internal.
+# Порт 9997 (API) наружу НЕ публикуется — он доступен только внутри сети Docker.
+
+logLevel: warn
+
+api: yes
+apiAddress: :9997
+
+authMethod: http
+authHTTPAddress: http://api:4000/stream/auth
+authHTTPExclude:
+  - action: api
+  - action: metrics
+  - action: pprof
+  - action: read
+  - action: playback
+
+rtmp: yes
+rtmpAddress: :1935
+
+hls: yes
+hlsAddress: :8888
+# В проде перед MediaMTX стоит reverse proxy с TLS, и домен фронта известен —
+# звёздочку здесь ставить незачем. Подставьте свой домен.
+hlsAllowOrigins: ["https://example.com"]
+hlsVariant: fmp4
+hlsSegmentCount: 7
+hlsSegmentDuration: 1s
+
+webrtc: yes
+webrtcAddress: :8889
+webrtcAllowOrigins: ["https://example.com"]
+webrtcLocalUDPAddress: :8189
+# Публичный IP/домен сервера — иначе WebRTC отдаст клиенту внутренние адреса Docker
+# и соединение не установится.
+webrtcAdditionalHosts:
+  - media.example.com
+
+rtsp: no
+srt: no
+moq: no
+
+paths:
+  all_others:
+    runOnAvailable: >
+      wget -q -O- -T 5 --post-data=ready
+      --header="X-Hook-Secret: $STREAM_HOOK_SECRET"
+      "http://api:4000/stream/hooks/ready?path=$MTX_PATH"
+    runOnUnavailable: >
+      wget -q -O- -T 5 --post-data=notready
+      --header="X-Hook-Secret: $STREAM_HOOK_SECRET"
+      "http://api:4000/stream/hooks/not-ready?path=$MTX_PATH"

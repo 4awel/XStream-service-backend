@@ -1,0 +1,311 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id String @id @default(uuid())
+
+  email    String @unique
+  password String
+
+  username    String  @unique
+  displayName String  @map("display_name")
+  avatar      String?
+  bio         String?
+
+  platform String?
+  language String?
+
+  isEmailVerified Boolean @default(false) @map("is_email_verified")
+  blocked         Boolean @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  channel Channel?
+
+  following       Follow[]
+  subscriptions   Subscription[]
+  createdEmojis   Emoji[]            @relation("emojiCreator")
+  createdSubIcons SubIcon[]          @relation("subIconCreator")
+  iconSelections  SubIconSelection[]
+
+  moderatedChannels  ChannelModerator[] @relation("moderator")
+  assignedModerators ChannelModerator[] @relation("assignedBy")
+  tagInterests       UserTagInterest[]
+
+  @@map("users")
+}
+
+model Channel {
+  id String @id @default(uuid())
+
+  streamerId String @unique @map("streamer_id") // @unique = один канал на пользователя
+  streamer   User   @relation(fields: [streamerId], references: [id], onDelete: Cascade)
+
+  streamTitle       String?
+  streamDescription String?
+  thumbnailUrl      String? @map("thumbnail_url")
+
+  // Текущий раздел трансляции для каталога/главной (Tag с kind = CATEGORY), как "Playing: CS2" на Twitch.
+  // Можно менять при каждом старте стрима, не влияет на список тегов ниже.
+  primaryCategoryId String? @map("primary_category_id")
+  primaryCategory   Tag?    @relation(fields: [primaryCategoryId], references: [id], onDelete: SetNull)
+
+  isLive        Boolean @default(false) @map("is_live")
+  blocked       Boolean @default(false)
+  streamKeyHash String? @unique @map("stream_key_hash")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  followers         Follow[]
+  subscriptions     Subscription[]
+  moderators        ChannelModerator[]
+  emojis            Emoji[]
+  subIcons          SubIcon[]
+  subIconSelections SubIconSelection[]
+  channelTags       ChannelTag[]
+
+  @@index([primaryCategoryId, isLive])
+  @@map("channels")
+}
+
+// Единый справочник: и статичные категории каталога (kind = CATEGORY),
+// и гибкие теги для рекомендаций (FORMAT, MOOD, LANGUAGE, CONTENT...).
+// Один справочник → одна админка → одна таблица интересов пользователя.
+model Tag {
+  id    String  @id @default(uuid())
+  slug  String  @unique // "cs2", "casino", "webcam", "ranked", "chill", "russian"
+  title String
+  kind  TagKind @default(CONTENT)
+
+  // Актуально только для kind = CATEGORY (карточки на главной/в каталоге)
+  group      TagGroup? // верхнеуровневая группировка в навигации: Игры, Общение...
+  isMature   Boolean   @default(false) @map("is_mature") // 18+
+  isVisible  Boolean   @default(true) @map("is_visible") // показывать в каталоге
+  externalId String?   @unique @map("external_id") // импорт из IGDB
+
+  viewersCount Int @default(0) @map("viewers_count")
+
+  primaryChannels Channel[]
+  channelTags     ChannelTag[]
+  userInterests   UserTagInterest[]
+
+  @@index([kind, isVisible, viewersCount])
+  @@map("tags")
+}
+
+enum TagKind {
+  CATEGORY // CS2, Dota 2, Казино, ASMR — статичные разделы каталога
+  GAME_MODE // ranked, casual, speedrun
+  FORMAT // webcam, no-cam, podcast, tutorial
+  MOOD // chill, hardcore, funny
+  LANGUAGE // russian, english
+  CONTENT // прочее, в т.ч. 18+/эротика как маркеры контента
+}
+
+enum TagGroup {
+  GAME // CS2, Dota 2, Minecraft ...
+  IRL // прогулки, путешествия, готовка
+  TALK // общение, подкасты, реакции
+  MUSIC // диджеи, живая игра, написание музыки
+  CREATIVE // рисование, 3D, рукоделие
+  EDUCATION // программирование, языки, лекции
+  ESPORTS // трансляции турниров
+  SPORTS // спорт вне игр
+  OTHER
+}
+
+// Текущие теги канала (в т.ч. второстепенные категории) — что реально в стриме,
+// по мнению AI-детекции / самого стримера / модератора.
+model ChannelTag {
+  channelId String @map("channel_id")
+  tagId     String @map("tag_id")
+
+  source     TagSource @default(AI)
+  confidence Float? // 0..1, только для AI
+  detectedAt DateTime  @default(now()) @map("detected_at")
+
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([channelId, tagId])
+  @@index([tagId])
+  @@map("channel_tags")
+}
+
+enum TagSource {
+  AI
+  STREAMER
+  MODERATOR
+}
+
+// Интерес пользователя к тегу/категории — основа рекомендаций.
+// EXPLICIT (онбординг, ручной выбор) — стабильный, не затухает.
+// IMPLICIT (поиск, просмотры) — временный: фоновая задача (cron) периодически
+// снижает weight по lastInteractionAt и удаляет строки, упавшие ниже порога;
+// каждое новое взаимодействие обновляет lastInteractionAt и поднимает weight.
+model UserTagInterest {
+  userId String @map("user_id")
+  tagId  String @map("tag_id")
+
+  weight Float          @default(5)
+  source InterestSource @default(EXPLICIT)
+
+  lastInteractionAt DateTime @default(now()) @map("last_interaction_at")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([userId, tagId])
+  @@index([tagId])
+  @@index([userId, weight])
+  @@map("user_tag_interests")
+}
+
+enum InterestSource {
+  EXPLICIT // человек выбрал сам (онбординг, ручной пик тега)
+  IMPLICIT // вывели из поведения (поиск, досмотры), затухает со временем
+}
+
+model Follow {
+  userId    String   @map("user_id")
+  channelId String   @map("channel_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@id([userId, channelId]) // нельзя подписаться дважды
+  @@index([channelId])
+  @@map("follows")
+}
+
+model Subscription {
+  id        String             @id @default(uuid())
+  userId    String             @map("user_id")
+  channelId String             @map("channel_id")
+  status    SubscriptionStatus @default(ACTIVE)
+  price     Int // в копейках
+  expiresAt DateTime           @map("expires_at")
+  createdAt DateTime           @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id])
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@index([channelId, status])
+  @@index([userId, channelId])
+  @@map("subscriptions")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  EXPIRED
+}
+
+model ChannelModerator {
+  userId    String   @map("user_id")
+  channelId String   @map("channel_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  assignedById String? @map("assigned_by_id")
+
+  user       User      @relation("moderator", fields: [userId], references: [id], onDelete: Cascade)
+  channel    Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  assignedBy User?     @relation("assignedBy", fields: [assignedById], references: [id])
+  emojis     Emoji[]
+  subIcons   SubIcon[]
+
+  @@id([userId, channelId])
+  @@index([channelId])
+  @@map("channel_moderators")
+}
+
+model Emoji {
+  id String @id @default(uuid())
+
+  channelId String  @map("channel_id")
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  creatorId String? @map("creator_id")
+  creator   User?   @relation("emojiCreator", fields: [creatorId], references: [id], onDelete: SetNull)
+
+  name String // без двоеточий: kekw
+  link String @map("image_url")
+
+  subscribersOnly Boolean @default(false) @map("subscribers_only")
+
+  createdAt                 DateTime          @default(now()) @map("created_at")
+  updatedAt                 DateTime          @updatedAt @map("updated_at")
+  channelModerator          ChannelModerator? @relation(fields: [channelModeratorUserId, channelModeratorChannelId], references: [userId, channelId])
+  channelModeratorUserId    String?
+  channelModeratorChannelId String?
+
+  @@unique([channelId, name])
+  @@index([creatorId])
+  @@map("emojis")
+}
+
+model SubIcon {
+  id String @id @default(uuid())
+
+  channelId String  @map("channel_id")
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  creatorId String? @map("creator_id")
+  creator   User?   @relation("subIconCreator", fields: [creatorId], references: [id], onDelete: SetNull)
+
+  name  String
+  link  String @map("image_url")
+  order Int    @default(0) // порядок в списке выбора
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  selections                SubIconSelection[]
+  channelModerator          ChannelModerator?  @relation(fields: [channelModeratorUserId, channelModeratorChannelId], references: [userId, channelId])
+  channelModeratorUserId    String?
+  channelModeratorChannelId String?
+
+  @@unique([channelId, name])
+  @@index([creatorId])
+  @@map("sub_icons")
+}
+
+model SubIconSelection {
+  userId    String @map("user_id")
+  channelId String @map("channel_id")
+  subIconId String @map("sub_icon_id")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  subIcon SubIcon @relation(fields: [subIconId], references: [id], onDelete: Cascade)
+
+  @@id([userId, channelId]) // одна выбранная иконка на канал
+  @@index([subIconId])
+  @@map("sub_icon_selections")
+}
+
+model EmailVerification {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  expiresAt DateTime @map("expires_at")
+
+  email        String @unique
+  codeHash     String @map("code_hash")
+  hashPassword String @map("hash_password")
+  attempts     Int    @default(0)
+
+  @@map("email_verifications")
+}

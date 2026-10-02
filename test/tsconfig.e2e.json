@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    // Jest гоняет e2e в ESM-режиме (@nestjs/config v12 — ESM-only),
+    // поэтому здесь другой module, чем в сборке nest build.
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["node", "jest"]
+  },
+  "include": ["../src/**/*.ts", "./**/*.ts"]
+}

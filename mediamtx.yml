@@ -1,0 +1,57 @@
+# MediaMTX — DEV. Бэкенд поднят на хосте, поэтому адреса через host.docker.internal.
+# Прод-вариант: mediamtx.prod.yml
+
+logLevel: info
+
+# Control API: бэкенд читает /v3/paths/list, чтобы сверять isLive с реальностью.
+api: yes
+apiAddress: :9997
+
+# Каждую попытку публикации MediaMTX отдаёт бэкенду на проверку ключа.
+# Любой ответ, кроме 2xx, = запретить. 404 тоже, поэтому эндпоинт обязан существовать.
+authMethod: http
+authHTTPAddress: http://host.docker.internal:4000/stream/auth
+authHTTPExclude:
+  - action: api
+  - action: metrics
+  - action: pprof
+  # Просмотр публичный. Без этого бэкенд дёргался бы на каждый HLS-сегмент
+  # каждого зрителя — и упал бы раньше, чем стрим успел начаться.
+  - action: read
+  - action: playback
+
+rtmp: yes
+rtmpAddress: :1935
+
+hls: yes
+hlsAddress: :8888
+hlsAllowOrigins: ["*"]
+# fmp4 даёт задержку ~2-4 с и работает по http. lowLatency браузеры требуют по https,
+# поэтому на локалке его не включаем.
+hlsVariant: fmp4
+hlsSegmentCount: 7
+hlsSegmentDuration: 1s
+
+webrtc: yes
+webrtcAddress: :8889
+webrtcAllowOrigins: ["*"]
+webrtcLocalUDPAddress: :8189
+
+# Лишние протоколы выключены: меньше открытых портов — меньше поводов для сюрпризов.
+rtsp: no
+srt: no
+moq: no
+
+paths:
+  all_others:
+    # MTX_PATH подставляет MediaMTX через переменные окружения команды,
+    # поэтому двойные кавычки (в одинарных шелл его не раскроет).
+    # -T 5 — чтобы зависший бэкенд не тормозил сам медиасервер.
+    runOnAvailable: >
+      wget -q -O- -T 5 --post-data=ready
+      --header="X-Hook-Secret: $STREAM_HOOK_SECRET"
+      "http://host.docker.internal:4000/stream/hooks/ready?path=$MTX_PATH"
+    runOnUnavailable: >
+      wget -q -O- -T 5 --post-data=notready
+      --header="X-Hook-Secret: $STREAM_HOOK_SECRET"
+      "http://host.docker.internal:4000/stream/hooks/not-ready?path=$MTX_PATH"

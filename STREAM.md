@@ -1,0 +1,153 @@
+# Стрим: как это работает и как запустить
+
+## Схема
+
+```
+OBS ──RTMP──> MediaMTX ──спрашивает──> POST /stream/auth ──> ключ верный?
+                  │                                             да / нет
+                  ├──вебхук──────────> POST /stream/hooks/ready ──> isLive = true
+                  │                    POST /stream/hooks/not-ready ──> isLive = false
+                  │
+                  └──HLS/WebRTC──────> браузер зрителя (hls.js)
+
+бэкенд ──раз в 10 с──> GET mediamtx:9997/v3/paths/list ──> сверяет isLive с реальностью
+```
+
+Ключевая идея: **ключ потока не хранится в MediaMTX**. Медиасервер ничего не знает
+про пользователей и на каждую попытку публикации спрашивает бэкенд. Любой ответ,
+кроме 2xx, означает «запретить» — поэтому 404 на `/stream/auth` (эндпоинта нет) или
+400 (валидация отвергла тело) выглядят как «неверный ключ».
+
+Ключ хранится **зашифрованным** (AES-256-GCM на `STREAM_KEY_SECRET`), а не хешем:
+стримеру его нужно показывать, а хеш обратно не разворачивается.
+
+## Что где лежит
+
+| Файл | Зачем |
+| --- | --- |
+| `mediamtx.yml` | конфиг медиасервера для dev (бэкенд на хосте) |
+| `mediamtx.prod.yml` | то же для прода (бэкенд в той же сети Docker) |
+| `docker-compose.yml` | dev-инфраструктура: postgres, redis, mailpit, mediamtx |
+| `docker-compose.prod.yml` | прод-стек целиком, включая сам Nest |
+| `src/core/stream/` | эндпоинты для MediaMTX: авторизация, вебхуки, сверка |
+| `src/shared/utils/stream-key.util.ts` | генерация, шифрование, сравнение ключей |
+| `src/shared/config/media.config.ts` | адреса MediaMTX, dev-дефолты и обязательные прод-значения |
+
+## Запуск в dev
+
+```bash
+cp .env.example .env            # и заполнить секреты: openssl rand -hex 32
+docker compose up -d            # postgres, redis, mailpit, mediamtx
+npm run db:generate
+npx prisma migrate deploy       # или npm run db:push
+npm run start:dev
+```
+
+Проверить, что медиасервер взлетел без претензий к конфигу:
+
+```bash
+docker logs mediamtx | tail -20
+```
+
+Строчки `started with listener on :1935 (TCP/RTMP)` и `:8888 (TCP/HTTP)` означают,
+что всё в порядке. Предупреждения `parameter ... is deprecated` означают, что
+MediaMTX обновился и переименовал параметр — поправьте конфиг.
+
+## Как начать стрим
+
+1. Залогиниться на фронте, в панели «Ключ для OBS» нажать «Создать».
+2. В OBS: **Настройки → Вещание → Сервис «Настраиваемый...»**, скопировать туда
+   «Сервер» и «Ключ потока» из панели.
+3. **Настройки → Вывод → режим «Расширенный» → Интервал ключевых кадров = 1 или 2
+   секунды.** Это обязательно, не косметика: HLS-сегмент может начинаться только
+   с ключевого кадра, а по умолчанию кодировщик ставит их раз в ~10 секунд.
+   С таким интервалом зритель будет ждать появления картинки все эти 10 секунд,
+   и задержка трансляции станет такой же.
+4. «Начать трансляцию».
+
+Через пару секунд `isLive` станет `true`, а плеер на странице канала подхватит
+поток сам (пока стрима нет, он молча пробует раз в 5 секунд).
+
+Адреса для справки:
+
+| Что | Dev |
+| --- | --- |
+| Сервер для OBS | `rtmp://localhost:1935` |
+| Ключ потока | `<channelId>?key=<ключ>` |
+| HLS для плеера | `http://localhost:8888/<channelId>/index.m3u8` |
+| WebRTC (WHEP) | `http://localhost:8889/<channelId>/whep` |
+| Встроенный плеер MediaMTX | `http://localhost:8888/<channelId>` |
+
+### Проверить без OBS
+
+Авторизация:
+
+```bash
+curl -i -X POST http://localhost:4000/stream/auth \
+  -H 'Content-Type: application/json' \
+  -d '{"action":"publish","path":"<channelId>","query":"key=<ключ>","protocol":"rtmp"}'
+```
+
+200 — пустят, 401 — нет. Публикация тестовым сигналом:
+
+```bash
+# -g 30 = ключевой кадр раз в секунду при 30 fps; без него манифест не отдаётся ~10 с
+ffmpeg -re -f lavfi -i "testsrc=size=1280x720:rate=30" -f lavfi -i "sine" \
+  -c:v libx264 -preset veryfast -tune zerolatency -g 30 -c:a aac \
+  -f flv "rtmp://localhost:1935/<channelId>?key=<ключ>"
+```
+
+## Прод
+
+```bash
+cp .env.production.example .env.production   # заполнить
+# в mediamtx.prod.yml заменить example.com на свои домены
+docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
+```
+
+Чем отличается от dev:
+
+- порты postgres и redis наружу не публикуются, API MediaMTX (9997) тоже;
+- mailpit нет — письма идут через реальный SMTP;
+- миграции прогоняет отдельный one-shot сервис `migrate`, и `api` ждёт его успеха;
+- Swagger (`/api`) отключён — он описывает и приватные эндпоинты;
+- `hlsAllowOrigins` / `webrtcAllowOrigins` — конкретные домены, а не `*`;
+- `SESSION_SECURE=true` и `SESSION_SAME_SITE=none`, если фронт на другом домене.
+
+Что нужно дополнительно, но в репозиторий не входит:
+
+- **TLS-прокси** (nginx/caddy) перед портами 8888 и 8889. Браузер не пустит
+  запрос с `https://` фронта на `http://` медиасервер — схемы должны совпадать.
+- **`webrtcAdditionalHosts`** в `mediamtx.prod.yml` — публичный домен сервера.
+  Без него WebRTC отдаст клиенту внутренние адреса Docker и не соединится.
+- Порт **1935 (RTMP) открыть наружу** — в него стучится OBS стримеров.
+
+## Диагностика
+
+| Симптом | Причина |
+| --- | --- |
+| OBS: «Не удалось подключиться», в логах mediamtx `failed to authenticate: code 404` | бэкенд не запущен или не на том порту, что в `authHTTPAddress` |
+| то же, но `code 400: property ... should not exist` | MediaMTX добавил поле в тело запроса. Тело разбирается руками (`stream-auth.request.ts`) именно поэтому, но если вернёте DTO — вот эта ошибка и будет |
+| то же, но `code 401` | ключ действительно не тот: сбросьте и скопируйте заново |
+| Стрим идёт, но `isLive` остаётся `false` | вебхук не доходит: проверьте `STREAM_HOOK_SECRET` — он должен совпадать в `.env` и в контейнере mediamtx |
+| `isLive` остался `true` после выключения OBS | вебхук потерялся; сверка исправит это в пределах `MEDIAMTX_SYNC_INTERVAL_MS` |
+| Стрим идёт, `isLive = true`, но плеер ещё ~10 секунд пишет «Стример не в эфире» | интервал ключевых кадров в OBS слишком большой. Поставьте 1-2 секунды |
+| Плеер вечно пишет «Стример не в эфире» | смотрите консоль браузера: при CORS или недоступном медиасервере там будет `HLS error` |
+| `GET /channel/stream-key` отдаёт 409 | сменился `STREAM_KEY_SECRET`, старые ключи не расшифровываются — нужен сброс |
+
+Полезное:
+
+```bash
+curl -s http://localhost:9997/v3/paths/list | python3 -m json.tool   # кто вещает прямо сейчас
+docker logs -f mediamtx                                              # что видит медиасервер
+```
+
+## Чего ещё нет
+
+- **WebSocket-шлюза.** Фронт уже подключает `socket.io-client` (чат, счётчик
+  зрителей, алерты), но на бэкенде гейтвея нет — эта часть не работает.
+- **Счётчика зрителей.** MediaMTX знает его (`readers` в `/v3/paths/list`),
+  но наружу он пока не отдаётся.
+- **Удаления `prisma7.config.ts`.** Это дубль `prisma.config.ts` с другим именем
+  переменной (`POSTGRES_URL` вместо `DATABASE_URL`), и Prisma берёт именно его.
+  Пока в `.env` есть обе переменные, всё работает; дубль стоит удалить.
