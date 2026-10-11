@@ -23,8 +23,10 @@ cookie туда не попадает. Из-за этого в чате на п�
 
 1. Закоммитить и запушить бэкенд на GitHub.
 2. Dashboard → New → Blueprint → выбрать репозиторий. Render создаст
-   `xstream-api` и `xstream-redis` (Key Value). Postgres внешний (Neon):
-   на free-плане Render разрешена только одна база на аккаунт.
+   только `xstream-api`. Postgres (Neon) и Redis (Upstash) внешние: на
+   free-плане Render разрешены одна база и один Key Value на аккаунт.
+   В Upstash создать Redis (регион Frankfurt) и вписать его `rediss://...`
+   в `REDIS_URL`.
    В Neon создать проект (регион Frankfurt), взять connection string и вписать
    его в `DATABASE_URL` и `POSTGRES_URL`.
 3. Заполнить запрошенные переменные:
@@ -48,4 +50,3 @@ cookie туда не попадает. Из-за этого в чате на п�
 
 - Сервис на Render засыпает после 15 минут без запросов. Первый запрос после
   этого идёт около минуты.
-- Key Value на free-плане не сохраняется на диск: после рестарта все разлогинятся.

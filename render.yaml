@@ -29,11 +29,10 @@ services:
         sync: false
       - key: POSTGRES_URL
         sync: false
+      # Внешний Redis: на free-плане Render разрешён только один Key Value.
+      # Upstash (rediss://...) или Internal URL уже существующего Key Value.
       - key: REDIS_URL
-        fromService:
-          type: keyvalue
-          name: xstream-redis
-          property: connectionString
+        sync: false
 
       - key: COOKIE_SECRET
         generateValue: true
@@ -106,13 +105,4 @@ services:
         value: stream-media
       - key: S3_PUBLIC_URL
         value: https://s3.invalid/stream-media
-
-  - type: keyvalue
-    name: xstream-redis
-    plan: free
-    region: frankfurt
-    # Тут лежат сессии — вытеснять их нельзя.
-    maxmemoryPolicy: noeviction
-    # Пустой список — доступ только из сервисов Render.
-    ipAllowList: []
 
