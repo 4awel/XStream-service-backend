@@ -2,9 +2,10 @@ import { Channel } from "@/core/entity/channel.entity";
 import { User } from "@/core/entity/user.entity";
 import type {
   CreateUserProps,
+  UpdateProfileProps,
+  UpdateSettingsProps,
   UpdateUserProps,
 } from "@/core/repositories/abstracts/props/user.props";
-import { EditChannelSettiengsDto } from "@/core/user/dto/user.dto";
 
 export abstract class UserRepository {
   abstract existsByEmail(email: string): Promise<boolean>;
@@ -22,7 +23,21 @@ export abstract class UserRepository {
     userId: string,
   ): Promise<{ user: User; channel: Channel } | null>;
 
-  abstract changeUsername(userId: string, username: string): Promise<void>;
+  abstract findByUsername(username: string): Promise<User | null>;
 
-  abstract changeChannel(dto: EditChannelSettiengsDto): Promise<Channel | null>;
+  /** null — username уже занят (уникальный индекс), остальное бросается. */
+  abstract updateProfile(
+    userId: string,
+    props: UpdateProfileProps,
+  ): Promise<User | null>;
+
+  abstract updateSettings(
+    userId: string,
+    props: UpdateSettingsProps,
+  ): Promise<User>;
+
+  /** Ключ объекта в S3 или null — убрать аватар. */
+  abstract setAvatar(userId: string, avatarKey: string | null): Promise<void>;
+
+  abstract completeOnboarding(userId: string): Promise<void>;
 }

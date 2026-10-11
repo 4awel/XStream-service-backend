@@ -1,74 +1,111 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Inject,
   Patch,
-  Req,
-  UnauthorizedException,
+  Post,
+  Put,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import {
   ApiBadRequestResponse,
+  ApiBody,
+  ApiConflictResponse,
+  ApiConsumes,
+  ApiCookieAuth,
   ApiOkResponse,
   ApiTags,
+  ApiTooManyRequestsResponse,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
-import { type Request } from "express";
-import { UserUseCase } from "@/core/use-case/user/user.use-case";
-import {
-    EditChannelSettiengsDto,
-  EditPasswordDto,
-  EditPasswordResponse,
-  StatusResponse,
-  UserResponse,
-} from "@/core/user/dto/user.dto";
+
+import { CurrentUserId } from "@/core/auth/decorator/current-user-id.decorator";
+import { SessionGuard } from "@/core/auth/guards/session.guard";
+import { IStorage } from "@/core/storage/storage.abstract";
+import { ChannelTransformer } from "@/core/transformers/channel.transformer";
+import { TagTransformer } from "@/core/transformers/tag.transformer";
 import { UserTransformer } from "@/core/transformers/user.transformers";
 import { AuthUseCase } from "@/core/use-case/auth/auth.use-case";
+import { FollowUseCase } from "@/core/use-case/follow/follow.use-case";
+import {
+  UserUseCase,
+  type UserWithChannel,
+} from "@/core/use-case/user/user.use-case";
+import {
+  PublicChannelResponse,
+  TagResponse,
+  UpdateInterestsDto,
+  UpdateProfileDto,
+  UpdateSettingsDto,
+} from "@/core/user/dto/profile.dto";
+import {
+  EditPasswordDto,
+  EditPasswordResponse,
+  UserResponse,
+} from "@/core/user/dto/user.dto";
+import { imageUploadOptions, requireFile } from "@/core/user/upload.pipe";
+
+const FILE_BODY = {
+  schema: {
+    type: "object",
+    properties: { file: { type: "string", format: "binary" } },
+  },
+};
 
 @Controller("user")
 @ApiTags("user")
+@ApiCookieAuth()
+@UseGuards(SessionGuard)
+@ApiUnauthorizedResponse({ description: "Нет активной сессии" })
 export class UserController {
   constructor(
-    @Inject(UserUseCase)
-    private userUseCase: UserUseCase,
-
-    @Inject(AuthUseCase)
-    private authUseCase: AuthUseCase,
+    @Inject(UserUseCase) private readonly userUseCase: UserUseCase,
+    @Inject(AuthUseCase) private readonly authUseCase: AuthUseCase,
+    @Inject(FollowUseCase) private readonly followUseCase: FollowUseCase,
+    @Inject(IStorage) private readonly storage: IStorage,
   ) {}
 
-  @ApiOkResponse({
-    description: "Кто я: работает по session-cookie, без повторного логина.",
-  })
-  @ApiUnauthorizedResponse({ description: "Нет активной сессии" })
+  @ApiOkResponse({ type: UserResponse, description: "Текущий пользователь" })
   @Get("me")
-  async getMe(@Req() req: Request): Promise<UserResponse> {
-    if (!req.session?.userId) {
-      throw new UnauthorizedException();
-    }
-
-    const user = await this.userUseCase.getUserWithChannel(req.session?.userId);
-
-    return UserTransformer.toResponse(user.user, user.channel);
+  async getMe(@CurrentUserId() userId: string): Promise<UserResponse> {
+    return this.toResponse(await this.userUseCase.getUserWithChannel(userId));
   }
 
-  @ApiBadRequestResponse({
-    description: `401: Unauthorized, 400: "password must be a string"`,
-  })
-  @ApiOkResponse({
-    description: "Изменить пароль пользователя",
-    type: EditPasswordResponse,
-  })
+  @ApiOkResponse({ type: UserResponse })
+  @ApiConflictResponse({ description: "username занят" })
+  @ApiBadRequestResponse({ description: "Невалидные поля или зарезервированный username" })
+  @Patch("profile")
+  async updateProfile(
+    @CurrentUserId() userId: string,
+    @Body() dto: UpdateProfileDto,
+  ): Promise<UserResponse> {
+    return this.toResponse(await this.userUseCase.updateProfile(userId, dto));
+  }
+
+  @ApiOkResponse({ type: UserResponse, description: "Тема и прочие настройки интерфейса" })
+  @Patch("settings")
+  async updateSettings(
+    @CurrentUserId() userId: string,
+    @Body() dto: UpdateSettingsDto,
+  ): Promise<UserResponse> {
+    return this.toResponse(await this.userUseCase.updateSettings(userId, dto));
+  }
+
+  @ApiOkResponse({ type: EditPasswordResponse })
   @Patch("password")
   async changeUserPassword(
-    @Req() req: Request,
+    @CurrentUserId() userId: string,
     @Body() dto: EditPasswordDto,
   ): Promise<EditPasswordResponse> {
-    if (!req.session?.userId) {
-      throw new UnauthorizedException();
-    }
-
     await this.authUseCase.changePassword({
-      userId: req.session.userId,
+      userId,
       oldPassword: dto.oldPassword,
       newPassword: dto.newPassword,
     });
@@ -76,39 +113,61 @@ export class UserController {
     return { status: 200, message: "Password changed" };
   }
 
-  @ApiOkResponse({
-    description: "Изменение названия канала",
-  })
-  @ApiBadRequestResponse({
-    description: "401: Unautorizated",
-  })
-  @Patch("/change/username")
-  async changeUsername(
-    @Req() req: Request,
-    @Body() data: string,
-  ): Promise<StatusResponse> {
-    if (!req.session?.userId) {
-      throw new UnauthorizedException();
-    }
-
-    await this.userUseCase.changeUsername(req.session.userId, data);
-
-    return { status: 200, message: "Username changed" };
+  @ApiOkResponse({ type: UserResponse })
+  @ApiConsumes("multipart/form-data")
+  @ApiBody(FILE_BODY)
+  @ApiTooManyRequestsResponse({ description: "Не больше 10 загрузок за 10 минут" })
+  @Post("avatar")
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(FileInterceptor("file", imageUploadOptions))
+  async uploadAvatar(
+    @CurrentUserId() userId: string,
+    @UploadedFile() file: Express.Multer.File | undefined,
+  ): Promise<UserResponse> {
+    return this.toResponse(
+      await this.userUseCase.uploadAvatar(userId, requireFile(file)),
+    );
   }
 
-  @ApiBadRequestResponse({
-    description: "401: Unauthorized"
+  @ApiOkResponse({ type: UserResponse })
+  @Delete("avatar")
+  async removeAvatar(@CurrentUserId() userId: string): Promise<UserResponse> {
+    return this.toResponse(await this.userUseCase.removeAvatar(userId));
+  }
+
+  @ApiOkResponse({ type: [TagResponse], description: "Интересы пользователя" })
+  @Get("interests")
+  async getInterests(@CurrentUserId() userId: string): Promise<TagResponse[]> {
+    const tags = await this.userUseCase.listInterests(userId);
+    return tags.map(TagTransformer.toResponse);
+  }
+
+  @ApiOkResponse({
+    type: [TagResponse],
+    description: "Сохраняет выбранные интересы и отмечает онбординг пройденным",
   })
-  async changeChannelSettings(
-    @Req() req: Request,
-    @Body() dto: EditChannelSettiengsDto
-  ): Promise<StatusResponse> {
-    if (!req.session?.userId) {
-        throw new UnauthorizedException();
-    }
+  @Put("interests")
+  async saveInterests(
+    @CurrentUserId() userId: string,
+    @Body() dto: UpdateInterestsDto,
+  ): Promise<TagResponse[]> {
+    const tags = await this.userUseCase.saveInterests(userId, dto.tagIds);
+    return tags.map(TagTransformer.toResponse);
+  }
 
-    await this.userUseCase.changeChannelSettings(dto);
+  @ApiOkResponse({
+    type: [PublicChannelResponse],
+    description: "Каналы, на которые подписан пользователь; в эфире — первыми",
+  })
+  @Get("follows")
+  async getFollows(
+    @CurrentUserId() userId: string,
+  ): Promise<PublicChannelResponse[]> {
+    const channels = await this.followUseCase.listFollowed(userId);
+    return channels.map((live) => ChannelTransformer.toPublic(live, this.storage));
+  }
 
-    return { status: 200, message: "Channel changed" }
+  private toResponse({ user, channel }: UserWithChannel): UserResponse {
+    return UserTransformer.toResponse(user, channel, this.storage);
   }
 }

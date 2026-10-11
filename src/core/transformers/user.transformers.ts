@@ -1,19 +1,24 @@
-import { User } from "@/core/entity/user.entity";
-import { UserResponse } from "@/core/user/dto/user.dto";
 import { Channel } from "@/core/entity/channel.entity";
+import { User } from "@/core/entity/user.entity";
+import { IStorage } from "@/core/storage/storage.abstract";
 import { ChannelTransformer } from "@/core/transformers/channel.transformer";
+import { UserResponse } from "@/core/user/dto/user.dto";
 
 export class UserTransformer {
   constructor() {
     throw new Error("Cannot instance of static class");
   }
 
-  public static toResponse(user: User, channel: Channel): UserResponse {
+  public static toResponse(
+    user: User,
+    channel: Channel,
+    storage: IStorage,
+  ): UserResponse {
     return {
       id: user.id,
       email: user.email,
       username: user.username,
-      avatar: user.avatar,
+      avatarUrl: storage.publicUrl(user.avatarKey),
       bio: user.bio,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
@@ -21,7 +26,9 @@ export class UserTransformer {
       platform: user.platform,
       language: user.language,
       isEmailVerified: user.isEmailVerified,
-      channel: ChannelTransformer.toResponse(channel),
+      theme: user.theme,
+      onboardingCompleted: user.onboardingCompleted,
+      channel: ChannelTransformer.toResponse(channel, storage),
     };
   }
 }

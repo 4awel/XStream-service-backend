@@ -9,7 +9,6 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from "@nestjs/websockets";
-import { randomUUID } from "node:crypto";
 import type { IncomingMessage } from "node:http";
 import type { RequestHandler } from "express";
 import type { SessionData } from "express-session";
@@ -18,28 +17,31 @@ import { Server, Socket } from "socket.io";
 import { SESSION_MIDDLEWARE } from "@/core/auth/session.module";
 import {
   type ChannelRef,
-  type ChatSendInput,
   type ClientToServerEvents,
-  type FollowPayload,
   type ServerToClientEvents,
   type SocketData,
   SOCKET_EVENT,
   channelRoom,
-  type SubscriptionPayload,
 } from "@/core/events/events";
 import { IDataServices } from "@/core/repositories/data-service.repository";
-import { RateLimitService } from "@/core/security/rate-limit.service";
+import { ViewerCountService } from "@/core/viewers/viewer-count.service";
 
 import "@/core/auth/session.types";
 
-type AppServer = Server<ClientToServerEvents, ServerToClientEvents, never, SocketData>;
-type AppSocket = Socket<ClientToServerEvents, ServerToClientEvents, never, SocketData>;
+export type AppServer = Server<
+  ClientToServerEvents,
+  ServerToClientEvents,
+  never,
+  SocketData
+>;
+export type AppSocket = Socket<
+  ClientToServerEvents,
+  ServerToClientEvents,
+  never,
+  SocketData
+>;
 
 type HandshakeRequest = IncomingMessage & { session?: Partial<SessionData> };
-
-const MAX_TEXT_LENGTH = 500;
-const CHAT_LIMIT = 10;
-const CHAT_WINDOW_SEC = 10;
 
 @WebSocketGateway({
   cors: {
@@ -65,7 +67,7 @@ export class EventsGateway
     private readonly sessionMiddleware: RequestHandler,
     @Inject(IDataServices)
     private readonly dataService: IDataServices,
-    private readonly rateLimit: RateLimitService,
+    private readonly viewers: ViewerCountService,
   ) {}
 
   afterInit(server: AppServer): void {
@@ -140,65 +142,17 @@ export class EventsGateway
     await this.leaveCurrentChannel(client);
   }
 
-  @SubscribeMessage(SOCKET_EVENT.ChatSend)
-  async handleChatSend(
-    @ConnectedSocket() client: AppSocket,
-    @MessageBody() body: ChatSendInput,
-  ): Promise<void> {
-    const { userId, username, channelId } = client.data;
-
-    if (userId === null || username === null) {
-      return;
-    }
-
-    // Писать можно только в ту комнату, в которой находишься: иначе
-    // достаточно было бы знать чужой channelId, чтобы писать в чужой чат.
-    if (channelId === null || readChannelId(body) !== channelId) {
-      return;
-    }
-
-    const text = readText(body);
-
-    if (text === null) {
-      return;
-    }
-
-    const isAllowed = await this.rateLimit.tryConsume(
-      `chat:${userId}`,
-      CHAT_LIMIT,
-      CHAT_WINDOW_SEC,
-    );
-
-    if (!isAllowed) {
-      // Клиенту ответить нечем: контракт не предусматривает события ошибки.
-      this.logger.warn(`Чат: лимит исчерпан, пользователь ${userId}`);
-      return;
-    }
-
-    // Сообщения нигде не хранятся — в схеме Prisma нет таблицы чата.
-    // Клиент держит последние 200 в памяти, при перезагрузке чат пуст.
-    this.server.to(channelRoom(channelId)).emit(SOCKET_EVENT.ChatMessage, {
-      id: randomUUID(),
-      channelId,
-      userId,
-      username,
-      text,
-      createdAt: new Date().toISOString(),
-    });
-  }
-
-  /** Для будущей ручки подписки на канал. */
-  emitFollow(payload: FollowPayload): void {
-    this.server
-      .to(channelRoom(payload.channelId))
-      .emit(SOCKET_EVENT.Follow, payload);
-  }
-
-  /** Для будущей ручки оформления подписки. */
-  emitSubscription(payload: SubscriptionPayload): void {
-    this.server
-      .to(channelRoom(payload.channelId))
-      .emit(SOCKET_EVENT.Subscription, payload);
+  /**
+   * Единственная точка отправки клиентам. Use case зовёт её напрямую:
+   * `events.emitToChannel(id, SOCKET_EVENT.ChatMessage, payload)` — имя события
+   * и форма payload проверяются по ServerToClientEvents.
+   */
+  emitToChannel<E extends keyof ServerToClientEvents>(
+    channelId: string,
+    event: E,
+    ...payload: Parameters<ServerToClientEvents[E]>
+  ): void {
+    this.server.to(channelRoom(channelId)).emit(event, ...payload);
   }
 
   private async leaveCurrentChannel(client: AppSocket): Promise<void> {
@@ -224,10 +178,15 @@ export class EventsGateway
     const count = this.server.sockets.adapter.rooms.get(room)?.size ?? 0;
 
     this.server.to(room).emit(SOCKET_EVENT.ViewersCount, { channelId, count });
+    // Дублируем в Redis для REST: каталог и рекомендации сортируют по зрителям.
+    void this.viewers.set(channelId, count).catch((error: unknown) => {
+      this.logger.warn(`Не удалось записать зрителей ${channelId}: ${String(error)}`);
+    });
   }
+
 }
 
-const readChannelId = (body: unknown): string | null => {
+export const readChannelId = (body: unknown): string | null => {
   if (typeof body !== "object" || body === null) {
     return null;
   }
@@ -237,22 +196,4 @@ const readChannelId = (body: unknown): string | null => {
   return typeof channelId === "string" && channelId.length > 0
     ? channelId
     : null;
-};
-
-const readText = (body: unknown): string | null => {
-  if (typeof body !== "object" || body === null) {
-    return null;
-  }
-
-  const { text } = body as { text?: unknown };
-
-  if (typeof text !== "string") {
-    return null;
-  }
-
-  // Обрезаем на сервере независимо от клиента: он ограничение соблюдает,
-  // но полагаться на это нельзя.
-  const trimmed = text.trim().slice(0, MAX_TEXT_LENGTH);
-
-  return trimmed.length > 0 ? trimmed : null;
 };

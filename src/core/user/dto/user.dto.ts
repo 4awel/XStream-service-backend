@@ -1,6 +1,16 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsBoolean, IsDate, IsEmail, IsEmpty, IsString } from "class-validator";
+import {
+  IsBoolean,
+  IsDate,
+  IsEmail,
+  IsEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from "class-validator";
 
 export class ChannelResponse {
   @ApiProperty({
@@ -43,6 +53,9 @@ export class ChannelResponse {
   @IsBoolean()
   isLive: boolean;
 
+  @ApiProperty({ description: "шапка канала", nullable: true, type: String })
+  bannerUrl: string | null;
+
   @ApiProperty({
     description: "дата создания",
   })
@@ -53,53 +66,6 @@ export class ChannelResponse {
     description: "дата обновления",
   })
   @IsDate()
-  updatedAt: Date;
-}
-
-export class EditChannelSettiengsDto {
-  @ApiProperty({
-    description: "id, канала",
-  })
-  id: string;
-
-  @ApiProperty({
-    description: "id, стримера",
-  })
-  streamerId: string;
-
-  @ApiProperty({
-    description: "название стрима",
-  })
-  streamTitle: string;
-
-  @ApiProperty({
-    description: "описание стрмиа",
-  })
-  streamDescription: string;
-
-  @ApiProperty({
-    description: "ссылка на превью (изобр)",
-  })
-  thumbnailUrl: string;
-
-  @ApiProperty({
-    description: "категория стрима",
-  })
-  primaryCategoryId: string;
-
-  @ApiProperty({
-    description: "статус стрима",
-  })
-  isLive: boolean;
-
-  @ApiProperty({
-    description: "дата созд",
-  })
-  createdAt: Date;
-
-  @ApiProperty({
-    description: "дата обнавления",
-  })
   updatedAt: Date;
 }
 
@@ -125,13 +91,23 @@ export class StatusResponse {
 }
 
 export class EditPasswordDto {
+  @ApiPropertyOptional({ description: "устарело, сервер берёт id из сессии" })
+  @IsOptional()
   @IsString()
-  id: string;
+  id?: string;
 
+  @ApiProperty()
   @IsString()
+  @MaxLength(128)
   oldPassword: string;
 
+  @ApiProperty({ description: "8–128 символов, минимум одна буква и одна цифра" })
   @IsString()
+  @MinLength(8)
+  @MaxLength(128)
+  @Matches(/(?=.*\p{L})(?=.*\d)/u, {
+    message: "password must contain at least one letter and one digit",
+  })
   newPassword: string;
 }
 
@@ -174,11 +150,17 @@ export class UserResponse {
   bio: string | null;
 
   @ApiProperty({
-    description: "аватар, либо есть либо дефолт",
+    description: "ссылка на аватар; null — показывать заглушку",
+    nullable: true,
+    type: String,
   })
-  @IsString()
-  @IsEmpty()
-  avatar: string | null;
+  avatarUrl: string | null;
+
+  @ApiProperty({ enum: ["DARK", "LIGHT"] })
+  theme: "DARK" | "LIGHT";
+
+  @ApiProperty({ description: "онбординг пройден" })
+  onboardingCompleted: boolean;
 
   @ApiProperty({
     description: "устройство с которого был зареган",

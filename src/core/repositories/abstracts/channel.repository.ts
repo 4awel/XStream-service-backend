@@ -1,17 +1,34 @@
 import { Channel } from "@/core/entity/channel.entity";
+import { ChannelView } from "@/core/entity/channel-view";
+import type { UpdateChannelInfoProps } from "@/core/repositories/abstracts/props/user.props";
 
 export abstract class ChannelRepository {
-  /** Канал стримера: у пользователя он всегда один (streamerId @unique). */
   abstract findByStreamerId(userId: string): Promise<Channel | null>;
 
-  /** Канал по его собственному id — именно он приходит в пути публикации от MediaMTX. */
   abstract findByChannelId(channelId: string): Promise<Channel | null>;
 
   abstract resetStreamKey(userId: string, key: string): Promise<void>;
 
-  /** Возвращает число затронутых строк: 0 означает «пути с таким id канала нет». */
   abstract setLive(channelId: string, isLive: boolean): Promise<number>;
 
-  /** Приводит isLive всех каналов к списку реально вещающих сейчас. */
-  abstract syncLive(liveChannelIds: string[]): Promise<void>;
+  abstract syncLive(liveChannelIds: string[]): Promise<string[]>;
+
+  abstract updateInfo(
+    channelId: string,
+    props: UpdateChannelInfoProps,
+  ): Promise<Channel>;
+
+  abstract setBanner(
+    channelId: string,
+    bannerKey: string | null,
+  ): Promise<void>;
+
+  abstract findViewByUsername(username: string): Promise<ChannelView | null>;
+
+  abstract findViewById(channelId: string): Promise<ChannelView | null>;
+
+  abstract listLive(query: {
+    limit: number;
+    categoryId?: string;
+  }): Promise<ChannelView[]>;
 }

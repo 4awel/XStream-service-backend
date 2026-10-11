@@ -5,11 +5,12 @@ import { UserRepository } from "@/core/repositories/abstracts/user.repository";
 import { PrismaUserMapper } from "@/core/mappers/user.mapper";
 import {
   CreateUserProps,
+  UpdateProfileProps,
+  UpdateSettingsProps,
   UpdateUserProps,
 } from "@/core/repositories/abstracts/props/user.props";
 import { Channel } from "@/core/entity/channel.entity";
 import { PrismaChannelMapper } from "@/core/mappers/channel.mapper";
-import { EditChannelSettiengsDto } from "@/core/user/dto/user.dto";
 
 const UNIQUE_VIOLATION = "P2002";
 
@@ -65,24 +66,6 @@ export class PrismaUserRepository extends UserRepository {
     return PrismaUserMapper.toEntity(updateUser);
   }
 
-  async changeUsername(userId: string, username: string): Promise<void> {
-    const user = await this.findById(userId);
-
-    if (!user) {
-      throw new Error("updateUser: User not found");
-    }
-
-    (await this,
-      this.prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          username: username,
-        },
-      }));
-  }
-
   async findById(userId: string): Promise<User | null> {
     const user = await this.prisma.user.findFirst({
       where: { id: userId },
@@ -124,24 +107,55 @@ export class PrismaUserRepository extends UserRepository {
     };
   }
 
-  async changeChannel(data: EditChannelSettiengsDto): Promise<Channel | null> {
-    if (!data || !data.id) {
-      return null;
+  async findByUsername(username: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({ where: { username } });
+    return user ? PrismaUserMapper.toEntity(user) : null;
+  }
+
+  async updateProfile(
+    userId: string,
+    props: UpdateProfileProps,
+  ): Promise<User | null> {
+    try {
+      const user = await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          username: props.username,
+          displayName: props.displayName,
+          bio: props.bio,
+        },
+      });
+      return PrismaUserMapper.toEntity(user);
+    } catch (error) {
+      if ((error as { code?: string }).code === UNIQUE_VIOLATION) {
+        return null;
+      }
+      throw error;
     }
+  }
 
-    const updatedChannel = await this.prisma.channel.update({
-      where: {
-        id: data.id,
-      },
-      data: {
-        streamTitle: data.streamTitle,
-        streamDescription: data.streamDescription,
-        thumbnailUrl: data.thumbnailUrl,
-        primaryCategoryId: data.primaryCategoryId,
-        updatedAt: Date.now().toString(),
-      },
+  async updateSettings(
+    userId: string,
+    props: UpdateSettingsProps,
+  ): Promise<User> {
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: { theme: props.theme },
     });
+    return PrismaUserMapper.toEntity(user);
+  }
 
-    return PrismaChannelMapper.toEntity(updatedChannel);
+  async setAvatar(userId: string, avatarKey: string | null): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { avatar: avatarKey },
+    });
+  }
+
+  async completeOnboarding(userId: string): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { onboardingCompleted: true },
+    });
   }
 }

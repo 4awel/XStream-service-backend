@@ -1,0 +1,41 @@
+# Один адрес для фронта, API и HLS — чтобы сессионная кука была «своей» для браузера.
+# Запуск:  caddy run --config Caddyfile.dev
+# Туннель: cloudflared tunnel --url http://localhost:8080
+{
+	# Доверяем X-Forwarded-* от cloudflared (он на этой же машине). Иначе Caddy
+	# затрёт X-Forwarded-Proto=https на http, Express решит, что соединение
+	# не защищено, и не выдаст Secure-куку сессии.
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+:8080 {
+	# /api/auth/login -> http://localhost:4000/auth/login (префикс срезается)
+	handle_path /api/* {
+		reverse_proxy localhost:4000
+	}
+
+	# socket.io без среза префикса: путь по умолчанию /socket.io
+	handle /socket.io/* {
+		reverse_proxy localhost:4000
+	}
+
+	# /hls/<channel>/index.m3u8 -> http://localhost:8888/<channel>/index.m3u8
+	handle_path /hls/* {
+		reverse_proxy localhost:8888 {
+			# MediaMTX отвечает 302 с путём от корня (cookieCheck) — возвращаем срезанный префикс
+			header_down Location ^/(.*)$ /hls/$1
+		}
+	}
+
+	# /media/stream-media/avatars/... -> MinIO (публичное чтение файлов)
+	handle_path /media/* {
+		reverse_proxy localhost:9000
+	}
+
+	# всё остальное — Next.js
+	handle {
+		reverse_proxy localhost:3000
+	}
+}

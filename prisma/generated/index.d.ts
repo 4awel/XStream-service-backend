@@ -73,6 +73,11 @@ export type SubIconSelection = $Result.DefaultSelection<Prisma.$SubIconSelection
  * 
  */
 export type EmailVerification = $Result.DefaultSelection<Prisma.$EmailVerificationPayload>
+/**
+ * Model ChatMessages
+ * 
+ */
+export type ChatMessages = $Result.DefaultSelection<Prisma.$ChatMessagesPayload>
 
 /**
  * Enums
@@ -130,6 +135,14 @@ export const SubscriptionStatus: {
 
 export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]
 
+
+export const Theme: {
+  DARK: 'DARK',
+  LIGHT: 'LIGHT'
+};
+
+export type Theme = (typeof Theme)[keyof typeof Theme]
+
 }
 
 export type TagKind = $Enums.TagKind
@@ -151,6 +164,10 @@ export const InterestSource: typeof $Enums.InterestSource
 export type SubscriptionStatus = $Enums.SubscriptionStatus
 
 export const SubscriptionStatus: typeof $Enums.SubscriptionStatus
+
+export type Theme = $Enums.Theme
+
+export const Theme: typeof $Enums.Theme
 
 /**
  * ##  Prisma Client ʲˢ
@@ -392,6 +409,16 @@ export class PrismaClient<
     * ```
     */
   get emailVerification(): Prisma.EmailVerificationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.chatMessages`: Exposes CRUD operations for the **ChatMessages** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ChatMessages
+    * const chatMessages = await prisma.chatMessages.findMany()
+    * ```
+    */
+  get chatMessages(): Prisma.ChatMessagesDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -850,7 +877,8 @@ export namespace Prisma {
     Emoji: 'Emoji',
     SubIcon: 'SubIcon',
     SubIconSelection: 'SubIconSelection',
-    EmailVerification: 'EmailVerification'
+    EmailVerification: 'EmailVerification',
+    ChatMessages: 'ChatMessages'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -866,7 +894,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "channel" | "tag" | "channelTag" | "userTagInterest" | "follow" | "subscription" | "channelModerator" | "emoji" | "subIcon" | "subIconSelection" | "emailVerification"
+      modelProps: "user" | "channel" | "tag" | "channelTag" | "userTagInterest" | "follow" | "subscription" | "channelModerator" | "emoji" | "subIcon" | "subIconSelection" | "emailVerification" | "chatMessages"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1758,6 +1786,80 @@ export namespace Prisma {
           }
         }
       }
+      ChatMessages: {
+        payload: Prisma.$ChatMessagesPayload<ExtArgs>
+        fields: Prisma.ChatMessagesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ChatMessagesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChatMessagesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagesPayload>
+          }
+          findFirst: {
+            args: Prisma.ChatMessagesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChatMessagesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagesPayload>
+          }
+          findMany: {
+            args: Prisma.ChatMessagesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagesPayload>[]
+          }
+          create: {
+            args: Prisma.ChatMessagesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagesPayload>
+          }
+          createMany: {
+            args: Prisma.ChatMessagesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChatMessagesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagesPayload>[]
+          }
+          delete: {
+            args: Prisma.ChatMessagesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagesPayload>
+          }
+          update: {
+            args: Prisma.ChatMessagesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagesPayload>
+          }
+          deleteMany: {
+            args: Prisma.ChatMessagesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChatMessagesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ChatMessagesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagesPayload>[]
+          }
+          upsert: {
+            args: Prisma.ChatMessagesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagesPayload>
+          }
+          aggregate: {
+            args: Prisma.ChatMessagesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChatMessages>
+          }
+          groupBy: {
+            args: Prisma.ChatMessagesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChatMessagesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChatMessagesCountArgs<ExtArgs>
+            result: $Utils.Optional<ChatMessagesCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1893,6 +1995,7 @@ export namespace Prisma {
     subIcon?: SubIconOmit
     subIconSelection?: SubIconSelectionOmit
     emailVerification?: EmailVerificationOmit
+    chatMessages?: ChatMessagesOmit
   }
 
   /* Types for Logging */
@@ -1978,6 +2081,7 @@ export namespace Prisma {
     createdEmojis: number
     createdSubIcons: number
     iconSelections: number
+    chatMessages: number
     moderatedChannels: number
     assignedModerators: number
     tagInterests: number
@@ -1989,6 +2093,7 @@ export namespace Prisma {
     createdEmojis?: boolean | UserCountOutputTypeCountCreatedEmojisArgs
     createdSubIcons?: boolean | UserCountOutputTypeCountCreatedSubIconsArgs
     iconSelections?: boolean | UserCountOutputTypeCountIconSelectionsArgs
+    chatMessages?: boolean | UserCountOutputTypeCountChatMessagesArgs
     moderatedChannels?: boolean | UserCountOutputTypeCountModeratedChannelsArgs
     assignedModerators?: boolean | UserCountOutputTypeCountAssignedModeratorsArgs
     tagInterests?: boolean | UserCountOutputTypeCountTagInterestsArgs
@@ -2043,6 +2148,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountChatMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChatMessagesWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountModeratedChannelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ChannelModeratorWhereInput
   }
@@ -2074,6 +2186,7 @@ export namespace Prisma {
     subIcons: number
     subIconSelections: number
     channelTags: number
+    chatMessages: number
   }
 
   export type ChannelCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2084,6 +2197,7 @@ export namespace Prisma {
     subIcons?: boolean | ChannelCountOutputTypeCountSubIconsArgs
     subIconSelections?: boolean | ChannelCountOutputTypeCountSubIconSelectionsArgs
     channelTags?: boolean | ChannelCountOutputTypeCountChannelTagsArgs
+    chatMessages?: boolean | ChannelCountOutputTypeCountChatMessagesArgs
   }
 
   // Custom InputTypes
@@ -2144,6 +2258,13 @@ export namespace Prisma {
    */
   export type ChannelCountOutputTypeCountChannelTagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ChannelTagWhereInput
+  }
+
+  /**
+   * ChannelCountOutputType without action
+   */
+  export type ChannelCountOutputTypeCountChatMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChatMessagesWhereInput
   }
 
 
@@ -2291,6 +2412,8 @@ export namespace Prisma {
     bio: string | null
     platform: string | null
     language: string | null
+    theme: $Enums.Theme | null
+    onboardingCompleted: boolean | null
     isEmailVerified: boolean | null
     blocked: boolean | null
     createdAt: Date | null
@@ -2307,6 +2430,8 @@ export namespace Prisma {
     bio: string | null
     platform: string | null
     language: string | null
+    theme: $Enums.Theme | null
+    onboardingCompleted: boolean | null
     isEmailVerified: boolean | null
     blocked: boolean | null
     createdAt: Date | null
@@ -2323,6 +2448,8 @@ export namespace Prisma {
     bio: number
     platform: number
     language: number
+    theme: number
+    onboardingCompleted: number
     isEmailVerified: number
     blocked: number
     createdAt: number
@@ -2341,6 +2468,8 @@ export namespace Prisma {
     bio?: true
     platform?: true
     language?: true
+    theme?: true
+    onboardingCompleted?: true
     isEmailVerified?: true
     blocked?: true
     createdAt?: true
@@ -2357,6 +2486,8 @@ export namespace Prisma {
     bio?: true
     platform?: true
     language?: true
+    theme?: true
+    onboardingCompleted?: true
     isEmailVerified?: true
     blocked?: true
     createdAt?: true
@@ -2373,6 +2504,8 @@ export namespace Prisma {
     bio?: true
     platform?: true
     language?: true
+    theme?: true
+    onboardingCompleted?: true
     isEmailVerified?: true
     blocked?: true
     createdAt?: true
@@ -2462,6 +2595,8 @@ export namespace Prisma {
     bio: string | null
     platform: string | null
     language: string | null
+    theme: $Enums.Theme
+    onboardingCompleted: boolean
     isEmailVerified: boolean
     blocked: boolean
     createdAt: Date
@@ -2495,6 +2630,8 @@ export namespace Prisma {
     bio?: boolean
     platform?: boolean
     language?: boolean
+    theme?: boolean
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: boolean
@@ -2505,6 +2642,7 @@ export namespace Prisma {
     createdEmojis?: boolean | User$createdEmojisArgs<ExtArgs>
     createdSubIcons?: boolean | User$createdSubIconsArgs<ExtArgs>
     iconSelections?: boolean | User$iconSelectionsArgs<ExtArgs>
+    chatMessages?: boolean | User$chatMessagesArgs<ExtArgs>
     moderatedChannels?: boolean | User$moderatedChannelsArgs<ExtArgs>
     assignedModerators?: boolean | User$assignedModeratorsArgs<ExtArgs>
     tagInterests?: boolean | User$tagInterestsArgs<ExtArgs>
@@ -2521,6 +2659,8 @@ export namespace Prisma {
     bio?: boolean
     platform?: boolean
     language?: boolean
+    theme?: boolean
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: boolean
@@ -2537,6 +2677,8 @@ export namespace Prisma {
     bio?: boolean
     platform?: boolean
     language?: boolean
+    theme?: boolean
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: boolean
@@ -2553,13 +2695,15 @@ export namespace Prisma {
     bio?: boolean
     platform?: boolean
     language?: boolean
+    theme?: boolean
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "username" | "displayName" | "avatar" | "bio" | "platform" | "language" | "isEmailVerified" | "blocked" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "username" | "displayName" | "avatar" | "bio" | "platform" | "language" | "theme" | "onboardingCompleted" | "isEmailVerified" | "blocked" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     channel?: boolean | User$channelArgs<ExtArgs>
     following?: boolean | User$followingArgs<ExtArgs>
@@ -2567,6 +2711,7 @@ export namespace Prisma {
     createdEmojis?: boolean | User$createdEmojisArgs<ExtArgs>
     createdSubIcons?: boolean | User$createdSubIconsArgs<ExtArgs>
     iconSelections?: boolean | User$iconSelectionsArgs<ExtArgs>
+    chatMessages?: boolean | User$chatMessagesArgs<ExtArgs>
     moderatedChannels?: boolean | User$moderatedChannelsArgs<ExtArgs>
     assignedModerators?: boolean | User$assignedModeratorsArgs<ExtArgs>
     tagInterests?: boolean | User$tagInterestsArgs<ExtArgs>
@@ -2584,6 +2729,7 @@ export namespace Prisma {
       createdEmojis: Prisma.$EmojiPayload<ExtArgs>[]
       createdSubIcons: Prisma.$SubIconPayload<ExtArgs>[]
       iconSelections: Prisma.$SubIconSelectionPayload<ExtArgs>[]
+      chatMessages: Prisma.$ChatMessagesPayload<ExtArgs>[]
       moderatedChannels: Prisma.$ChannelModeratorPayload<ExtArgs>[]
       assignedModerators: Prisma.$ChannelModeratorPayload<ExtArgs>[]
       tagInterests: Prisma.$UserTagInterestPayload<ExtArgs>[]
@@ -2598,6 +2744,14 @@ export namespace Prisma {
       bio: string | null
       platform: string | null
       language: string | null
+      /**
+       * * Тема интерфейса; хранится на сервере, чтобы совпадала на всех устройствах.
+       */
+      theme: $Enums.Theme
+      /**
+       * * Онбординг (выбор интересов) пройден — больше не показываем.
+       */
+      onboardingCompleted: boolean
       isEmailVerified: boolean
       blocked: boolean
       createdAt: Date
@@ -3002,6 +3156,7 @@ export namespace Prisma {
     createdEmojis<T extends User$createdEmojisArgs<ExtArgs> = {}>(args?: Subset<T, User$createdEmojisArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmojiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     createdSubIcons<T extends User$createdSubIconsArgs<ExtArgs> = {}>(args?: Subset<T, User$createdSubIconsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubIconPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     iconSelections<T extends User$iconSelectionsArgs<ExtArgs> = {}>(args?: Subset<T, User$iconSelectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubIconSelectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    chatMessages<T extends User$chatMessagesArgs<ExtArgs> = {}>(args?: Subset<T, User$chatMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     moderatedChannels<T extends User$moderatedChannelsArgs<ExtArgs> = {}>(args?: Subset<T, User$moderatedChannelsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChannelModeratorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assignedModerators<T extends User$assignedModeratorsArgs<ExtArgs> = {}>(args?: Subset<T, User$assignedModeratorsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChannelModeratorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tagInterests<T extends User$tagInterestsArgs<ExtArgs> = {}>(args?: Subset<T, User$tagInterestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserTagInterestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3043,6 +3198,8 @@ export namespace Prisma {
     readonly bio: FieldRef<"User", 'String'>
     readonly platform: FieldRef<"User", 'String'>
     readonly language: FieldRef<"User", 'String'>
+    readonly theme: FieldRef<"User", 'Theme'>
+    readonly onboardingCompleted: FieldRef<"User", 'Boolean'>
     readonly isEmailVerified: FieldRef<"User", 'Boolean'>
     readonly blocked: FieldRef<"User", 'Boolean'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
@@ -3579,6 +3736,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.chatMessages
+   */
+  export type User$chatMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessages
+     */
+    select?: ChatMessagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessages
+     */
+    omit?: ChatMessagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessagesInclude<ExtArgs> | null
+    where?: ChatMessagesWhereInput
+    orderBy?: ChatMessagesOrderByWithRelationInput | ChatMessagesOrderByWithRelationInput[]
+    cursor?: ChatMessagesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChatMessagesScalarFieldEnum | ChatMessagesScalarFieldEnum[]
+  }
+
+  /**
    * User.moderatedChannels
    */
   export type User$moderatedChannelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3685,8 +3866,10 @@ export namespace Prisma {
     streamTitle: string | null
     streamDescription: string | null
     thumbnailUrl: string | null
+    bannerKey: string | null
     primaryCategoryId: string | null
     isLive: boolean | null
+    liveStartedAt: Date | null
     blocked: boolean | null
     streamKeyHash: string | null
     createdAt: Date | null
@@ -3699,8 +3882,10 @@ export namespace Prisma {
     streamTitle: string | null
     streamDescription: string | null
     thumbnailUrl: string | null
+    bannerKey: string | null
     primaryCategoryId: string | null
     isLive: boolean | null
+    liveStartedAt: Date | null
     blocked: boolean | null
     streamKeyHash: string | null
     createdAt: Date | null
@@ -3713,8 +3898,10 @@ export namespace Prisma {
     streamTitle: number
     streamDescription: number
     thumbnailUrl: number
+    bannerKey: number
     primaryCategoryId: number
     isLive: number
+    liveStartedAt: number
     blocked: number
     streamKeyHash: number
     createdAt: number
@@ -3729,8 +3916,10 @@ export namespace Prisma {
     streamTitle?: true
     streamDescription?: true
     thumbnailUrl?: true
+    bannerKey?: true
     primaryCategoryId?: true
     isLive?: true
+    liveStartedAt?: true
     blocked?: true
     streamKeyHash?: true
     createdAt?: true
@@ -3743,8 +3932,10 @@ export namespace Prisma {
     streamTitle?: true
     streamDescription?: true
     thumbnailUrl?: true
+    bannerKey?: true
     primaryCategoryId?: true
     isLive?: true
+    liveStartedAt?: true
     blocked?: true
     streamKeyHash?: true
     createdAt?: true
@@ -3757,8 +3948,10 @@ export namespace Prisma {
     streamTitle?: true
     streamDescription?: true
     thumbnailUrl?: true
+    bannerKey?: true
     primaryCategoryId?: true
     isLive?: true
+    liveStartedAt?: true
     blocked?: true
     streamKeyHash?: true
     createdAt?: true
@@ -3844,8 +4037,10 @@ export namespace Prisma {
     streamTitle: string | null
     streamDescription: string | null
     thumbnailUrl: string | null
+    bannerKey: string | null
     primaryCategoryId: string | null
     isLive: boolean
+    liveStartedAt: Date | null
     blocked: boolean
     streamKeyHash: string | null
     createdAt: Date
@@ -3875,8 +4070,10 @@ export namespace Prisma {
     streamTitle?: boolean
     streamDescription?: boolean
     thumbnailUrl?: boolean
+    bannerKey?: boolean
     primaryCategoryId?: boolean
     isLive?: boolean
+    liveStartedAt?: boolean
     blocked?: boolean
     streamKeyHash?: boolean
     createdAt?: boolean
@@ -3890,6 +4087,7 @@ export namespace Prisma {
     subIcons?: boolean | Channel$subIconsArgs<ExtArgs>
     subIconSelections?: boolean | Channel$subIconSelectionsArgs<ExtArgs>
     channelTags?: boolean | Channel$channelTagsArgs<ExtArgs>
+    chatMessages?: boolean | Channel$chatMessagesArgs<ExtArgs>
     _count?: boolean | ChannelCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["channel"]>
 
@@ -3899,8 +4097,10 @@ export namespace Prisma {
     streamTitle?: boolean
     streamDescription?: boolean
     thumbnailUrl?: boolean
+    bannerKey?: boolean
     primaryCategoryId?: boolean
     isLive?: boolean
+    liveStartedAt?: boolean
     blocked?: boolean
     streamKeyHash?: boolean
     createdAt?: boolean
@@ -3915,8 +4115,10 @@ export namespace Prisma {
     streamTitle?: boolean
     streamDescription?: boolean
     thumbnailUrl?: boolean
+    bannerKey?: boolean
     primaryCategoryId?: boolean
     isLive?: boolean
+    liveStartedAt?: boolean
     blocked?: boolean
     streamKeyHash?: boolean
     createdAt?: boolean
@@ -3931,15 +4133,17 @@ export namespace Prisma {
     streamTitle?: boolean
     streamDescription?: boolean
     thumbnailUrl?: boolean
+    bannerKey?: boolean
     primaryCategoryId?: boolean
     isLive?: boolean
+    liveStartedAt?: boolean
     blocked?: boolean
     streamKeyHash?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ChannelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "streamerId" | "streamTitle" | "streamDescription" | "thumbnailUrl" | "primaryCategoryId" | "isLive" | "blocked" | "streamKeyHash" | "createdAt" | "updatedAt", ExtArgs["result"]["channel"]>
+  export type ChannelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "streamerId" | "streamTitle" | "streamDescription" | "thumbnailUrl" | "bannerKey" | "primaryCategoryId" | "isLive" | "liveStartedAt" | "blocked" | "streamKeyHash" | "createdAt" | "updatedAt", ExtArgs["result"]["channel"]>
   export type ChannelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     streamer?: boolean | UserDefaultArgs<ExtArgs>
     primaryCategory?: boolean | Channel$primaryCategoryArgs<ExtArgs>
@@ -3950,6 +4154,7 @@ export namespace Prisma {
     subIcons?: boolean | Channel$subIconsArgs<ExtArgs>
     subIconSelections?: boolean | Channel$subIconSelectionsArgs<ExtArgs>
     channelTags?: boolean | Channel$channelTagsArgs<ExtArgs>
+    chatMessages?: boolean | Channel$chatMessagesArgs<ExtArgs>
     _count?: boolean | ChannelCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ChannelIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3973,6 +4178,7 @@ export namespace Prisma {
       subIcons: Prisma.$SubIconPayload<ExtArgs>[]
       subIconSelections: Prisma.$SubIconSelectionPayload<ExtArgs>[]
       channelTags: Prisma.$ChannelTagPayload<ExtArgs>[]
+      chatMessages: Prisma.$ChatMessagesPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3980,8 +4186,16 @@ export namespace Prisma {
       streamTitle: string | null
       streamDescription: string | null
       thumbnailUrl: string | null
+      /**
+       * * Ключ объекта в S3 (не URL): публичный адрес собирается из S3_PUBLIC_URL.
+       */
+      bannerKey: string | null
       primaryCategoryId: string | null
       isLive: boolean
+      /**
+       * * Когда начался текущий эфир; null — канал не в эфире. Для «в эфире 1:23».
+       */
+      liveStartedAt: Date | null
       blocked: boolean
       streamKeyHash: string | null
       createdAt: Date
@@ -4389,6 +4603,7 @@ export namespace Prisma {
     subIcons<T extends Channel$subIconsArgs<ExtArgs> = {}>(args?: Subset<T, Channel$subIconsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubIconPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     subIconSelections<T extends Channel$subIconSelectionsArgs<ExtArgs> = {}>(args?: Subset<T, Channel$subIconSelectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubIconSelectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     channelTags<T extends Channel$channelTagsArgs<ExtArgs> = {}>(args?: Subset<T, Channel$channelTagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChannelTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    chatMessages<T extends Channel$chatMessagesArgs<ExtArgs> = {}>(args?: Subset<T, Channel$chatMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4423,8 +4638,10 @@ export namespace Prisma {
     readonly streamTitle: FieldRef<"Channel", 'String'>
     readonly streamDescription: FieldRef<"Channel", 'String'>
     readonly thumbnailUrl: FieldRef<"Channel", 'String'>
+    readonly bannerKey: FieldRef<"Channel", 'String'>
     readonly primaryCategoryId: FieldRef<"Channel", 'String'>
     readonly isLive: FieldRef<"Channel", 'Boolean'>
+    readonly liveStartedAt: FieldRef<"Channel", 'DateTime'>
     readonly blocked: FieldRef<"Channel", 'Boolean'>
     readonly streamKeyHash: FieldRef<"Channel", 'String'>
     readonly createdAt: FieldRef<"Channel", 'DateTime'>
@@ -5014,6 +5231,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ChannelTagScalarFieldEnum | ChannelTagScalarFieldEnum[]
+  }
+
+  /**
+   * Channel.chatMessages
+   */
+  export type Channel$chatMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessages
+     */
+    select?: ChatMessagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessages
+     */
+    omit?: ChatMessagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessagesInclude<ExtArgs> | null
+    where?: ChatMessagesWhereInput
+    orderBy?: ChatMessagesOrderByWithRelationInput | ChatMessagesOrderByWithRelationInput[]
+    cursor?: ChatMessagesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChatMessagesScalarFieldEnum | ChatMessagesScalarFieldEnum[]
   }
 
   /**
@@ -16366,6 +16607,1077 @@ export namespace Prisma {
 
 
   /**
+   * Model ChatMessages
+   */
+
+  export type AggregateChatMessages = {
+    _count: ChatMessagesCountAggregateOutputType | null
+    _min: ChatMessagesMinAggregateOutputType | null
+    _max: ChatMessagesMaxAggregateOutputType | null
+  }
+
+  export type ChatMessagesMinAggregateOutputType = {
+    id: string | null
+    channelId: string | null
+    userId: string | null
+    content: string | null
+    createdAt: Date | null
+  }
+
+  export type ChatMessagesMaxAggregateOutputType = {
+    id: string | null
+    channelId: string | null
+    userId: string | null
+    content: string | null
+    createdAt: Date | null
+  }
+
+  export type ChatMessagesCountAggregateOutputType = {
+    id: number
+    channelId: number
+    userId: number
+    content: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ChatMessagesMinAggregateInputType = {
+    id?: true
+    channelId?: true
+    userId?: true
+    content?: true
+    createdAt?: true
+  }
+
+  export type ChatMessagesMaxAggregateInputType = {
+    id?: true
+    channelId?: true
+    userId?: true
+    content?: true
+    createdAt?: true
+  }
+
+  export type ChatMessagesCountAggregateInputType = {
+    id?: true
+    channelId?: true
+    userId?: true
+    content?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ChatMessagesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChatMessages to aggregate.
+     */
+    where?: ChatMessagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatMessages to fetch.
+     */
+    orderBy?: ChatMessagesOrderByWithRelationInput | ChatMessagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChatMessagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ChatMessages
+    **/
+    _count?: true | ChatMessagesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChatMessagesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChatMessagesMaxAggregateInputType
+  }
+
+  export type GetChatMessagesAggregateType<T extends ChatMessagesAggregateArgs> = {
+        [P in keyof T & keyof AggregateChatMessages]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChatMessages[P]>
+      : GetScalarType<T[P], AggregateChatMessages[P]>
+  }
+
+
+
+
+  export type ChatMessagesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChatMessagesWhereInput
+    orderBy?: ChatMessagesOrderByWithAggregationInput | ChatMessagesOrderByWithAggregationInput[]
+    by: ChatMessagesScalarFieldEnum[] | ChatMessagesScalarFieldEnum
+    having?: ChatMessagesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChatMessagesCountAggregateInputType | true
+    _min?: ChatMessagesMinAggregateInputType
+    _max?: ChatMessagesMaxAggregateInputType
+  }
+
+  export type ChatMessagesGroupByOutputType = {
+    id: string
+    channelId: string
+    userId: string
+    content: string
+    createdAt: Date
+    _count: ChatMessagesCountAggregateOutputType | null
+    _min: ChatMessagesMinAggregateOutputType | null
+    _max: ChatMessagesMaxAggregateOutputType | null
+  }
+
+  type GetChatMessagesGroupByPayload<T extends ChatMessagesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChatMessagesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChatMessagesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChatMessagesGroupByOutputType[P]>
+            : GetScalarType<T[P], ChatMessagesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChatMessagesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    channelId?: boolean
+    userId?: boolean
+    content?: boolean
+    createdAt?: boolean
+    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chatMessages"]>
+
+  export type ChatMessagesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    channelId?: boolean
+    userId?: boolean
+    content?: boolean
+    createdAt?: boolean
+    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chatMessages"]>
+
+  export type ChatMessagesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    channelId?: boolean
+    userId?: boolean
+    content?: boolean
+    createdAt?: boolean
+    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chatMessages"]>
+
+  export type ChatMessagesSelectScalar = {
+    id?: boolean
+    channelId?: boolean
+    userId?: boolean
+    content?: boolean
+    createdAt?: boolean
+  }
+
+  export type ChatMessagesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "channelId" | "userId" | "content" | "createdAt", ExtArgs["result"]["chatMessages"]>
+  export type ChatMessagesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ChatMessagesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ChatMessagesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ChatMessagesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChatMessages"
+    objects: {
+      channel: Prisma.$ChannelPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      channelId: string
+      userId: string
+      content: string
+      createdAt: Date
+    }, ExtArgs["result"]["chatMessages"]>
+    composites: {}
+  }
+
+  type ChatMessagesGetPayload<S extends boolean | null | undefined | ChatMessagesDefaultArgs> = $Result.GetResult<Prisma.$ChatMessagesPayload, S>
+
+  type ChatMessagesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ChatMessagesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ChatMessagesCountAggregateInputType | true
+    }
+
+  export interface ChatMessagesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChatMessages'], meta: { name: 'ChatMessages' } }
+    /**
+     * Find zero or one ChatMessages that matches the filter.
+     * @param {ChatMessagesFindUniqueArgs} args - Arguments to find a ChatMessages
+     * @example
+     * // Get one ChatMessages
+     * const chatMessages = await prisma.chatMessages.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ChatMessagesFindUniqueArgs>(args: SelectSubset<T, ChatMessagesFindUniqueArgs<ExtArgs>>): Prisma__ChatMessagesClient<$Result.GetResult<Prisma.$ChatMessagesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ChatMessages that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ChatMessagesFindUniqueOrThrowArgs} args - Arguments to find a ChatMessages
+     * @example
+     * // Get one ChatMessages
+     * const chatMessages = await prisma.chatMessages.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ChatMessagesFindUniqueOrThrowArgs>(args: SelectSubset<T, ChatMessagesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChatMessagesClient<$Result.GetResult<Prisma.$ChatMessagesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChatMessages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessagesFindFirstArgs} args - Arguments to find a ChatMessages
+     * @example
+     * // Get one ChatMessages
+     * const chatMessages = await prisma.chatMessages.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ChatMessagesFindFirstArgs>(args?: SelectSubset<T, ChatMessagesFindFirstArgs<ExtArgs>>): Prisma__ChatMessagesClient<$Result.GetResult<Prisma.$ChatMessagesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChatMessages that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessagesFindFirstOrThrowArgs} args - Arguments to find a ChatMessages
+     * @example
+     * // Get one ChatMessages
+     * const chatMessages = await prisma.chatMessages.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ChatMessagesFindFirstOrThrowArgs>(args?: SelectSubset<T, ChatMessagesFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChatMessagesClient<$Result.GetResult<Prisma.$ChatMessagesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ChatMessages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessagesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ChatMessages
+     * const chatMessages = await prisma.chatMessages.findMany()
+     * 
+     * // Get first 10 ChatMessages
+     * const chatMessages = await prisma.chatMessages.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const chatMessagesWithIdOnly = await prisma.chatMessages.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ChatMessagesFindManyArgs>(args?: SelectSubset<T, ChatMessagesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ChatMessages.
+     * @param {ChatMessagesCreateArgs} args - Arguments to create a ChatMessages.
+     * @example
+     * // Create one ChatMessages
+     * const ChatMessages = await prisma.chatMessages.create({
+     *   data: {
+     *     // ... data to create a ChatMessages
+     *   }
+     * })
+     * 
+     */
+    create<T extends ChatMessagesCreateArgs>(args: SelectSubset<T, ChatMessagesCreateArgs<ExtArgs>>): Prisma__ChatMessagesClient<$Result.GetResult<Prisma.$ChatMessagesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ChatMessages.
+     * @param {ChatMessagesCreateManyArgs} args - Arguments to create many ChatMessages.
+     * @example
+     * // Create many ChatMessages
+     * const chatMessages = await prisma.chatMessages.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ChatMessagesCreateManyArgs>(args?: SelectSubset<T, ChatMessagesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ChatMessages and returns the data saved in the database.
+     * @param {ChatMessagesCreateManyAndReturnArgs} args - Arguments to create many ChatMessages.
+     * @example
+     * // Create many ChatMessages
+     * const chatMessages = await prisma.chatMessages.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ChatMessages and only return the `id`
+     * const chatMessagesWithIdOnly = await prisma.chatMessages.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ChatMessagesCreateManyAndReturnArgs>(args?: SelectSubset<T, ChatMessagesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ChatMessages.
+     * @param {ChatMessagesDeleteArgs} args - Arguments to delete one ChatMessages.
+     * @example
+     * // Delete one ChatMessages
+     * const ChatMessages = await prisma.chatMessages.delete({
+     *   where: {
+     *     // ... filter to delete one ChatMessages
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ChatMessagesDeleteArgs>(args: SelectSubset<T, ChatMessagesDeleteArgs<ExtArgs>>): Prisma__ChatMessagesClient<$Result.GetResult<Prisma.$ChatMessagesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ChatMessages.
+     * @param {ChatMessagesUpdateArgs} args - Arguments to update one ChatMessages.
+     * @example
+     * // Update one ChatMessages
+     * const chatMessages = await prisma.chatMessages.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ChatMessagesUpdateArgs>(args: SelectSubset<T, ChatMessagesUpdateArgs<ExtArgs>>): Prisma__ChatMessagesClient<$Result.GetResult<Prisma.$ChatMessagesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ChatMessages.
+     * @param {ChatMessagesDeleteManyArgs} args - Arguments to filter ChatMessages to delete.
+     * @example
+     * // Delete a few ChatMessages
+     * const { count } = await prisma.chatMessages.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ChatMessagesDeleteManyArgs>(args?: SelectSubset<T, ChatMessagesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChatMessages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessagesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ChatMessages
+     * const chatMessages = await prisma.chatMessages.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ChatMessagesUpdateManyArgs>(args: SelectSubset<T, ChatMessagesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChatMessages and returns the data updated in the database.
+     * @param {ChatMessagesUpdateManyAndReturnArgs} args - Arguments to update many ChatMessages.
+     * @example
+     * // Update many ChatMessages
+     * const chatMessages = await prisma.chatMessages.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ChatMessages and only return the `id`
+     * const chatMessagesWithIdOnly = await prisma.chatMessages.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ChatMessagesUpdateManyAndReturnArgs>(args: SelectSubset<T, ChatMessagesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ChatMessages.
+     * @param {ChatMessagesUpsertArgs} args - Arguments to update or create a ChatMessages.
+     * @example
+     * // Update or create a ChatMessages
+     * const chatMessages = await prisma.chatMessages.upsert({
+     *   create: {
+     *     // ... data to create a ChatMessages
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ChatMessages we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ChatMessagesUpsertArgs>(args: SelectSubset<T, ChatMessagesUpsertArgs<ExtArgs>>): Prisma__ChatMessagesClient<$Result.GetResult<Prisma.$ChatMessagesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ChatMessages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessagesCountArgs} args - Arguments to filter ChatMessages to count.
+     * @example
+     * // Count the number of ChatMessages
+     * const count = await prisma.chatMessages.count({
+     *   where: {
+     *     // ... the filter for the ChatMessages we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChatMessagesCountArgs>(
+      args?: Subset<T, ChatMessagesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChatMessagesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ChatMessages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessagesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChatMessagesAggregateArgs>(args: Subset<T, ChatMessagesAggregateArgs>): Prisma.PrismaPromise<GetChatMessagesAggregateType<T>>
+
+    /**
+     * Group by ChatMessages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessagesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChatMessagesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChatMessagesGroupByArgs['orderBy'] }
+        : { orderBy?: ChatMessagesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChatMessagesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChatMessagesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ChatMessages model
+   */
+  readonly fields: ChatMessagesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ChatMessages.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ChatMessagesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    channel<T extends ChannelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChannelDefaultArgs<ExtArgs>>): Prisma__ChannelClient<$Result.GetResult<Prisma.$ChannelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ChatMessages model
+   */
+  interface ChatMessagesFieldRefs {
+    readonly id: FieldRef<"ChatMessages", 'String'>
+    readonly channelId: FieldRef<"ChatMessages", 'String'>
+    readonly userId: FieldRef<"ChatMessages", 'String'>
+    readonly content: FieldRef<"ChatMessages", 'String'>
+    readonly createdAt: FieldRef<"ChatMessages", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ChatMessages findUnique
+   */
+  export type ChatMessagesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessages
+     */
+    select?: ChatMessagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessages
+     */
+    omit?: ChatMessagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessagesInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatMessages to fetch.
+     */
+    where: ChatMessagesWhereUniqueInput
+  }
+
+  /**
+   * ChatMessages findUniqueOrThrow
+   */
+  export type ChatMessagesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessages
+     */
+    select?: ChatMessagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessages
+     */
+    omit?: ChatMessagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessagesInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatMessages to fetch.
+     */
+    where: ChatMessagesWhereUniqueInput
+  }
+
+  /**
+   * ChatMessages findFirst
+   */
+  export type ChatMessagesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessages
+     */
+    select?: ChatMessagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessages
+     */
+    omit?: ChatMessagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessagesInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatMessages to fetch.
+     */
+    where?: ChatMessagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatMessages to fetch.
+     */
+    orderBy?: ChatMessagesOrderByWithRelationInput | ChatMessagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChatMessages.
+     */
+    cursor?: ChatMessagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatMessages.
+     */
+    distinct?: ChatMessagesScalarFieldEnum | ChatMessagesScalarFieldEnum[]
+  }
+
+  /**
+   * ChatMessages findFirstOrThrow
+   */
+  export type ChatMessagesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessages
+     */
+    select?: ChatMessagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessages
+     */
+    omit?: ChatMessagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessagesInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatMessages to fetch.
+     */
+    where?: ChatMessagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatMessages to fetch.
+     */
+    orderBy?: ChatMessagesOrderByWithRelationInput | ChatMessagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChatMessages.
+     */
+    cursor?: ChatMessagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatMessages.
+     */
+    distinct?: ChatMessagesScalarFieldEnum | ChatMessagesScalarFieldEnum[]
+  }
+
+  /**
+   * ChatMessages findMany
+   */
+  export type ChatMessagesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessages
+     */
+    select?: ChatMessagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessages
+     */
+    omit?: ChatMessagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessagesInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatMessages to fetch.
+     */
+    where?: ChatMessagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatMessages to fetch.
+     */
+    orderBy?: ChatMessagesOrderByWithRelationInput | ChatMessagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ChatMessages.
+     */
+    cursor?: ChatMessagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatMessages.
+     */
+    distinct?: ChatMessagesScalarFieldEnum | ChatMessagesScalarFieldEnum[]
+  }
+
+  /**
+   * ChatMessages create
+   */
+  export type ChatMessagesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessages
+     */
+    select?: ChatMessagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessages
+     */
+    omit?: ChatMessagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessagesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ChatMessages.
+     */
+    data: XOR<ChatMessagesCreateInput, ChatMessagesUncheckedCreateInput>
+  }
+
+  /**
+   * ChatMessages createMany
+   */
+  export type ChatMessagesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ChatMessages.
+     */
+    data: ChatMessagesCreateManyInput | ChatMessagesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ChatMessages createManyAndReturn
+   */
+  export type ChatMessagesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessages
+     */
+    select?: ChatMessagesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessages
+     */
+    omit?: ChatMessagesOmit<ExtArgs> | null
+    /**
+     * The data used to create many ChatMessages.
+     */
+    data: ChatMessagesCreateManyInput | ChatMessagesCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessagesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChatMessages update
+   */
+  export type ChatMessagesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessages
+     */
+    select?: ChatMessagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessages
+     */
+    omit?: ChatMessagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessagesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ChatMessages.
+     */
+    data: XOR<ChatMessagesUpdateInput, ChatMessagesUncheckedUpdateInput>
+    /**
+     * Choose, which ChatMessages to update.
+     */
+    where: ChatMessagesWhereUniqueInput
+  }
+
+  /**
+   * ChatMessages updateMany
+   */
+  export type ChatMessagesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ChatMessages.
+     */
+    data: XOR<ChatMessagesUpdateManyMutationInput, ChatMessagesUncheckedUpdateManyInput>
+    /**
+     * Filter which ChatMessages to update
+     */
+    where?: ChatMessagesWhereInput
+    /**
+     * Limit how many ChatMessages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChatMessages updateManyAndReturn
+   */
+  export type ChatMessagesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessages
+     */
+    select?: ChatMessagesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessages
+     */
+    omit?: ChatMessagesOmit<ExtArgs> | null
+    /**
+     * The data used to update ChatMessages.
+     */
+    data: XOR<ChatMessagesUpdateManyMutationInput, ChatMessagesUncheckedUpdateManyInput>
+    /**
+     * Filter which ChatMessages to update
+     */
+    where?: ChatMessagesWhereInput
+    /**
+     * Limit how many ChatMessages to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessagesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChatMessages upsert
+   */
+  export type ChatMessagesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessages
+     */
+    select?: ChatMessagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessages
+     */
+    omit?: ChatMessagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessagesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ChatMessages to update in case it exists.
+     */
+    where: ChatMessagesWhereUniqueInput
+    /**
+     * In case the ChatMessages found by the `where` argument doesn't exist, create a new ChatMessages with this data.
+     */
+    create: XOR<ChatMessagesCreateInput, ChatMessagesUncheckedCreateInput>
+    /**
+     * In case the ChatMessages was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChatMessagesUpdateInput, ChatMessagesUncheckedUpdateInput>
+  }
+
+  /**
+   * ChatMessages delete
+   */
+  export type ChatMessagesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessages
+     */
+    select?: ChatMessagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessages
+     */
+    omit?: ChatMessagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessagesInclude<ExtArgs> | null
+    /**
+     * Filter which ChatMessages to delete.
+     */
+    where: ChatMessagesWhereUniqueInput
+  }
+
+  /**
+   * ChatMessages deleteMany
+   */
+  export type ChatMessagesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChatMessages to delete
+     */
+    where?: ChatMessagesWhereInput
+    /**
+     * Limit how many ChatMessages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChatMessages without action
+   */
+  export type ChatMessagesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessages
+     */
+    select?: ChatMessagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessages
+     */
+    omit?: ChatMessagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatMessagesInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -16389,6 +17701,8 @@ export namespace Prisma {
     bio: 'bio',
     platform: 'platform',
     language: 'language',
+    theme: 'theme',
+    onboardingCompleted: 'onboardingCompleted',
     isEmailVerified: 'isEmailVerified',
     blocked: 'blocked',
     createdAt: 'createdAt',
@@ -16404,8 +17718,10 @@ export namespace Prisma {
     streamTitle: 'streamTitle',
     streamDescription: 'streamDescription',
     thumbnailUrl: 'thumbnailUrl',
+    bannerKey: 'bannerKey',
     primaryCategoryId: 'primaryCategoryId',
     isLive: 'isLive',
+    liveStartedAt: 'liveStartedAt',
     blocked: 'blocked',
     streamKeyHash: 'streamKeyHash',
     createdAt: 'createdAt',
@@ -16541,6 +17857,17 @@ export namespace Prisma {
   export type EmailVerificationScalarFieldEnum = (typeof EmailVerificationScalarFieldEnum)[keyof typeof EmailVerificationScalarFieldEnum]
 
 
+  export const ChatMessagesScalarFieldEnum: {
+    id: 'id',
+    channelId: 'channelId',
+    userId: 'userId',
+    content: 'content',
+    createdAt: 'createdAt'
+  };
+
+  export type ChatMessagesScalarFieldEnum = (typeof ChatMessagesScalarFieldEnum)[keyof typeof ChatMessagesScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -16581,6 +17908,20 @@ export namespace Prisma {
    * Reference to a field of type 'String[]'
    */
   export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Theme'
+   */
+  export type EnumThemeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Theme'>
+    
+
+
+  /**
+   * Reference to a field of type 'Theme[]'
+   */
+  export type ListEnumThemeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Theme[]'>
     
 
 
@@ -16719,6 +18060,8 @@ export namespace Prisma {
     bio?: StringNullableFilter<"User"> | string | null
     platform?: StringNullableFilter<"User"> | string | null
     language?: StringNullableFilter<"User"> | string | null
+    theme?: EnumThemeFilter<"User"> | $Enums.Theme
+    onboardingCompleted?: BoolFilter<"User"> | boolean
     isEmailVerified?: BoolFilter<"User"> | boolean
     blocked?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -16729,6 +18072,7 @@ export namespace Prisma {
     createdEmojis?: EmojiListRelationFilter
     createdSubIcons?: SubIconListRelationFilter
     iconSelections?: SubIconSelectionListRelationFilter
+    chatMessages?: ChatMessagesListRelationFilter
     moderatedChannels?: ChannelModeratorListRelationFilter
     assignedModerators?: ChannelModeratorListRelationFilter
     tagInterests?: UserTagInterestListRelationFilter
@@ -16744,6 +18088,8 @@ export namespace Prisma {
     bio?: SortOrderInput | SortOrder
     platform?: SortOrderInput | SortOrder
     language?: SortOrderInput | SortOrder
+    theme?: SortOrder
+    onboardingCompleted?: SortOrder
     isEmailVerified?: SortOrder
     blocked?: SortOrder
     createdAt?: SortOrder
@@ -16754,6 +18100,7 @@ export namespace Prisma {
     createdEmojis?: EmojiOrderByRelationAggregateInput
     createdSubIcons?: SubIconOrderByRelationAggregateInput
     iconSelections?: SubIconSelectionOrderByRelationAggregateInput
+    chatMessages?: ChatMessagesOrderByRelationAggregateInput
     moderatedChannels?: ChannelModeratorOrderByRelationAggregateInput
     assignedModerators?: ChannelModeratorOrderByRelationAggregateInput
     tagInterests?: UserTagInterestOrderByRelationAggregateInput
@@ -16772,6 +18119,8 @@ export namespace Prisma {
     bio?: StringNullableFilter<"User"> | string | null
     platform?: StringNullableFilter<"User"> | string | null
     language?: StringNullableFilter<"User"> | string | null
+    theme?: EnumThemeFilter<"User"> | $Enums.Theme
+    onboardingCompleted?: BoolFilter<"User"> | boolean
     isEmailVerified?: BoolFilter<"User"> | boolean
     blocked?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -16782,6 +18131,7 @@ export namespace Prisma {
     createdEmojis?: EmojiListRelationFilter
     createdSubIcons?: SubIconListRelationFilter
     iconSelections?: SubIconSelectionListRelationFilter
+    chatMessages?: ChatMessagesListRelationFilter
     moderatedChannels?: ChannelModeratorListRelationFilter
     assignedModerators?: ChannelModeratorListRelationFilter
     tagInterests?: UserTagInterestListRelationFilter
@@ -16797,6 +18147,8 @@ export namespace Prisma {
     bio?: SortOrderInput | SortOrder
     platform?: SortOrderInput | SortOrder
     language?: SortOrderInput | SortOrder
+    theme?: SortOrder
+    onboardingCompleted?: SortOrder
     isEmailVerified?: SortOrder
     blocked?: SortOrder
     createdAt?: SortOrder
@@ -16819,6 +18171,8 @@ export namespace Prisma {
     bio?: StringNullableWithAggregatesFilter<"User"> | string | null
     platform?: StringNullableWithAggregatesFilter<"User"> | string | null
     language?: StringNullableWithAggregatesFilter<"User"> | string | null
+    theme?: EnumThemeWithAggregatesFilter<"User"> | $Enums.Theme
+    onboardingCompleted?: BoolWithAggregatesFilter<"User"> | boolean
     isEmailVerified?: BoolWithAggregatesFilter<"User"> | boolean
     blocked?: BoolWithAggregatesFilter<"User"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -16834,8 +18188,10 @@ export namespace Prisma {
     streamTitle?: StringNullableFilter<"Channel"> | string | null
     streamDescription?: StringNullableFilter<"Channel"> | string | null
     thumbnailUrl?: StringNullableFilter<"Channel"> | string | null
+    bannerKey?: StringNullableFilter<"Channel"> | string | null
     primaryCategoryId?: StringNullableFilter<"Channel"> | string | null
     isLive?: BoolFilter<"Channel"> | boolean
+    liveStartedAt?: DateTimeNullableFilter<"Channel"> | Date | string | null
     blocked?: BoolFilter<"Channel"> | boolean
     streamKeyHash?: StringNullableFilter<"Channel"> | string | null
     createdAt?: DateTimeFilter<"Channel"> | Date | string
@@ -16849,6 +18205,7 @@ export namespace Prisma {
     subIcons?: SubIconListRelationFilter
     subIconSelections?: SubIconSelectionListRelationFilter
     channelTags?: ChannelTagListRelationFilter
+    chatMessages?: ChatMessagesListRelationFilter
   }
 
   export type ChannelOrderByWithRelationInput = {
@@ -16857,8 +18214,10 @@ export namespace Prisma {
     streamTitle?: SortOrderInput | SortOrder
     streamDescription?: SortOrderInput | SortOrder
     thumbnailUrl?: SortOrderInput | SortOrder
+    bannerKey?: SortOrderInput | SortOrder
     primaryCategoryId?: SortOrderInput | SortOrder
     isLive?: SortOrder
+    liveStartedAt?: SortOrderInput | SortOrder
     blocked?: SortOrder
     streamKeyHash?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -16872,6 +18231,7 @@ export namespace Prisma {
     subIcons?: SubIconOrderByRelationAggregateInput
     subIconSelections?: SubIconSelectionOrderByRelationAggregateInput
     channelTags?: ChannelTagOrderByRelationAggregateInput
+    chatMessages?: ChatMessagesOrderByRelationAggregateInput
   }
 
   export type ChannelWhereUniqueInput = Prisma.AtLeast<{
@@ -16884,8 +18244,10 @@ export namespace Prisma {
     streamTitle?: StringNullableFilter<"Channel"> | string | null
     streamDescription?: StringNullableFilter<"Channel"> | string | null
     thumbnailUrl?: StringNullableFilter<"Channel"> | string | null
+    bannerKey?: StringNullableFilter<"Channel"> | string | null
     primaryCategoryId?: StringNullableFilter<"Channel"> | string | null
     isLive?: BoolFilter<"Channel"> | boolean
+    liveStartedAt?: DateTimeNullableFilter<"Channel"> | Date | string | null
     blocked?: BoolFilter<"Channel"> | boolean
     createdAt?: DateTimeFilter<"Channel"> | Date | string
     updatedAt?: DateTimeFilter<"Channel"> | Date | string
@@ -16898,6 +18260,7 @@ export namespace Prisma {
     subIcons?: SubIconListRelationFilter
     subIconSelections?: SubIconSelectionListRelationFilter
     channelTags?: ChannelTagListRelationFilter
+    chatMessages?: ChatMessagesListRelationFilter
   }, "id" | "streamerId" | "streamKeyHash">
 
   export type ChannelOrderByWithAggregationInput = {
@@ -16906,8 +18269,10 @@ export namespace Prisma {
     streamTitle?: SortOrderInput | SortOrder
     streamDescription?: SortOrderInput | SortOrder
     thumbnailUrl?: SortOrderInput | SortOrder
+    bannerKey?: SortOrderInput | SortOrder
     primaryCategoryId?: SortOrderInput | SortOrder
     isLive?: SortOrder
+    liveStartedAt?: SortOrderInput | SortOrder
     blocked?: SortOrder
     streamKeyHash?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -16926,8 +18291,10 @@ export namespace Prisma {
     streamTitle?: StringNullableWithAggregatesFilter<"Channel"> | string | null
     streamDescription?: StringNullableWithAggregatesFilter<"Channel"> | string | null
     thumbnailUrl?: StringNullableWithAggregatesFilter<"Channel"> | string | null
+    bannerKey?: StringNullableWithAggregatesFilter<"Channel"> | string | null
     primaryCategoryId?: StringNullableWithAggregatesFilter<"Channel"> | string | null
     isLive?: BoolWithAggregatesFilter<"Channel"> | boolean
+    liveStartedAt?: DateTimeNullableWithAggregatesFilter<"Channel"> | Date | string | null
     blocked?: BoolWithAggregatesFilter<"Channel"> | boolean
     streamKeyHash?: StringNullableWithAggregatesFilter<"Channel"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Channel"> | Date | string
@@ -17631,6 +18998,64 @@ export namespace Prisma {
     attempts?: IntWithAggregatesFilter<"EmailVerification"> | number
   }
 
+  export type ChatMessagesWhereInput = {
+    AND?: ChatMessagesWhereInput | ChatMessagesWhereInput[]
+    OR?: ChatMessagesWhereInput[]
+    NOT?: ChatMessagesWhereInput | ChatMessagesWhereInput[]
+    id?: StringFilter<"ChatMessages"> | string
+    channelId?: StringFilter<"ChatMessages"> | string
+    userId?: StringFilter<"ChatMessages"> | string
+    content?: StringFilter<"ChatMessages"> | string
+    createdAt?: DateTimeFilter<"ChatMessages"> | Date | string
+    channel?: XOR<ChannelScalarRelationFilter, ChannelWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type ChatMessagesOrderByWithRelationInput = {
+    id?: SortOrder
+    channelId?: SortOrder
+    userId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    channel?: ChannelOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type ChatMessagesWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ChatMessagesWhereInput | ChatMessagesWhereInput[]
+    OR?: ChatMessagesWhereInput[]
+    NOT?: ChatMessagesWhereInput | ChatMessagesWhereInput[]
+    channelId?: StringFilter<"ChatMessages"> | string
+    userId?: StringFilter<"ChatMessages"> | string
+    content?: StringFilter<"ChatMessages"> | string
+    createdAt?: DateTimeFilter<"ChatMessages"> | Date | string
+    channel?: XOR<ChannelScalarRelationFilter, ChannelWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type ChatMessagesOrderByWithAggregationInput = {
+    id?: SortOrder
+    channelId?: SortOrder
+    userId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    _count?: ChatMessagesCountOrderByAggregateInput
+    _max?: ChatMessagesMaxOrderByAggregateInput
+    _min?: ChatMessagesMinOrderByAggregateInput
+  }
+
+  export type ChatMessagesScalarWhereWithAggregatesInput = {
+    AND?: ChatMessagesScalarWhereWithAggregatesInput | ChatMessagesScalarWhereWithAggregatesInput[]
+    OR?: ChatMessagesScalarWhereWithAggregatesInput[]
+    NOT?: ChatMessagesScalarWhereWithAggregatesInput | ChatMessagesScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ChatMessages"> | string
+    channelId?: StringWithAggregatesFilter<"ChatMessages"> | string
+    userId?: StringWithAggregatesFilter<"ChatMessages"> | string
+    content?: StringWithAggregatesFilter<"ChatMessages"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ChatMessages"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -17641,6 +19066,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -17651,6 +19078,7 @@ export namespace Prisma {
     createdEmojis?: EmojiCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestCreateNestedManyWithoutUserInput
@@ -17666,6 +19094,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -17676,6 +19106,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUncheckedCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconUncheckedCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorUncheckedCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorUncheckedCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestUncheckedCreateNestedManyWithoutUserInput
@@ -17691,6 +19122,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17701,6 +19134,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUpdateManyWithoutUserNestedInput
@@ -17716,6 +19150,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17726,6 +19162,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUncheckedUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUncheckedUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUncheckedUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUncheckedUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUncheckedUpdateManyWithoutUserNestedInput
@@ -17741,6 +19178,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -17757,6 +19196,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17773,6 +19214,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17784,7 +19227,9 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -17798,6 +19243,7 @@ export namespace Prisma {
     subIcons?: SubIconCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelUncheckedCreateInput = {
@@ -17806,8 +19252,10 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     primaryCategoryId?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -17819,6 +19267,7 @@ export namespace Prisma {
     subIcons?: SubIconUncheckedCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagUncheckedCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelUpdateInput = {
@@ -17826,7 +19275,9 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17840,6 +19291,7 @@ export namespace Prisma {
     subIcons?: SubIconUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelUncheckedUpdateInput = {
@@ -17848,8 +19300,10 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     primaryCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17861,6 +19315,7 @@ export namespace Prisma {
     subIcons?: SubIconUncheckedUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUncheckedUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUncheckedUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelCreateManyInput = {
@@ -17869,8 +19324,10 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     primaryCategoryId?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -17882,7 +19339,9 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17895,8 +19354,10 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     primaryCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18570,6 +20031,60 @@ export namespace Prisma {
     attempts?: IntFieldUpdateOperationsInput | number
   }
 
+  export type ChatMessagesCreateInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    channel: ChannelCreateNestedOneWithoutChatMessagesInput
+    user: UserCreateNestedOneWithoutChatMessagesInput
+  }
+
+  export type ChatMessagesUncheckedCreateInput = {
+    id?: string
+    channelId: string
+    userId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type ChatMessagesUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    channel?: ChannelUpdateOneRequiredWithoutChatMessagesNestedInput
+    user?: UserUpdateOneRequiredWithoutChatMessagesNestedInput
+  }
+
+  export type ChatMessagesUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    channelId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChatMessagesCreateManyInput = {
+    id?: string
+    channelId: string
+    userId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type ChatMessagesUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChatMessagesUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    channelId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -18598,6 +20113,13 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type EnumThemeFilter<$PrismaModel = never> = {
+    equals?: $Enums.Theme | EnumThemeFieldRefInput<$PrismaModel>
+    in?: $Enums.Theme[] | ListEnumThemeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Theme[] | ListEnumThemeFieldRefInput<$PrismaModel>
+    not?: NestedEnumThemeFilter<$PrismaModel> | $Enums.Theme
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -18651,6 +20173,12 @@ export namespace Prisma {
     none?: SubIconSelectionWhereInput
   }
 
+  export type ChatMessagesListRelationFilter = {
+    every?: ChatMessagesWhereInput
+    some?: ChatMessagesWhereInput
+    none?: ChatMessagesWhereInput
+  }
+
   export type ChannelModeratorListRelationFilter = {
     every?: ChannelModeratorWhereInput
     some?: ChannelModeratorWhereInput
@@ -18688,6 +20216,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type ChatMessagesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ChannelModeratorOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -18706,6 +20238,8 @@ export namespace Prisma {
     bio?: SortOrder
     platform?: SortOrder
     language?: SortOrder
+    theme?: SortOrder
+    onboardingCompleted?: SortOrder
     isEmailVerified?: SortOrder
     blocked?: SortOrder
     createdAt?: SortOrder
@@ -18722,6 +20256,8 @@ export namespace Prisma {
     bio?: SortOrder
     platform?: SortOrder
     language?: SortOrder
+    theme?: SortOrder
+    onboardingCompleted?: SortOrder
     isEmailVerified?: SortOrder
     blocked?: SortOrder
     createdAt?: SortOrder
@@ -18738,6 +20274,8 @@ export namespace Prisma {
     bio?: SortOrder
     platform?: SortOrder
     language?: SortOrder
+    theme?: SortOrder
+    onboardingCompleted?: SortOrder
     isEmailVerified?: SortOrder
     blocked?: SortOrder
     createdAt?: SortOrder
@@ -18780,6 +20318,16 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type EnumThemeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Theme | EnumThemeFieldRefInput<$PrismaModel>
+    in?: $Enums.Theme[] | ListEnumThemeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Theme[] | ListEnumThemeFieldRefInput<$PrismaModel>
+    not?: NestedEnumThemeWithAggregatesFilter<$PrismaModel> | $Enums.Theme
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumThemeFilter<$PrismaModel>
+    _max?: NestedEnumThemeFilter<$PrismaModel>
+  }
+
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -18800,6 +20348,17 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type UserScalarRelationFilter = {
@@ -18828,8 +20387,10 @@ export namespace Prisma {
     streamTitle?: SortOrder
     streamDescription?: SortOrder
     thumbnailUrl?: SortOrder
+    bannerKey?: SortOrder
     primaryCategoryId?: SortOrder
     isLive?: SortOrder
+    liveStartedAt?: SortOrder
     blocked?: SortOrder
     streamKeyHash?: SortOrder
     createdAt?: SortOrder
@@ -18842,8 +20403,10 @@ export namespace Prisma {
     streamTitle?: SortOrder
     streamDescription?: SortOrder
     thumbnailUrl?: SortOrder
+    bannerKey?: SortOrder
     primaryCategoryId?: SortOrder
     isLive?: SortOrder
+    liveStartedAt?: SortOrder
     blocked?: SortOrder
     streamKeyHash?: SortOrder
     createdAt?: SortOrder
@@ -18856,12 +20419,28 @@ export namespace Prisma {
     streamTitle?: SortOrder
     streamDescription?: SortOrder
     thumbnailUrl?: SortOrder
+    bannerKey?: SortOrder
     primaryCategoryId?: SortOrder
     isLive?: SortOrder
+    liveStartedAt?: SortOrder
     blocked?: SortOrder
     streamKeyHash?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type EnumTagKindFilter<$PrismaModel = never> = {
@@ -19438,6 +21017,30 @@ export namespace Prisma {
     attempts?: SortOrder
   }
 
+  export type ChatMessagesCountOrderByAggregateInput = {
+    id?: SortOrder
+    channelId?: SortOrder
+    userId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ChatMessagesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    channelId?: SortOrder
+    userId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ChatMessagesMinOrderByAggregateInput = {
+    id?: SortOrder
+    channelId?: SortOrder
+    userId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+  }
+
   export type ChannelCreateNestedOneWithoutStreamerInput = {
     create?: XOR<ChannelCreateWithoutStreamerInput, ChannelUncheckedCreateWithoutStreamerInput>
     connectOrCreate?: ChannelCreateOrConnectWithoutStreamerInput
@@ -19477,6 +21080,13 @@ export namespace Prisma {
     connectOrCreate?: SubIconSelectionCreateOrConnectWithoutUserInput | SubIconSelectionCreateOrConnectWithoutUserInput[]
     createMany?: SubIconSelectionCreateManyUserInputEnvelope
     connect?: SubIconSelectionWhereUniqueInput | SubIconSelectionWhereUniqueInput[]
+  }
+
+  export type ChatMessagesCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChatMessagesCreateWithoutUserInput, ChatMessagesUncheckedCreateWithoutUserInput> | ChatMessagesCreateWithoutUserInput[] | ChatMessagesUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatMessagesCreateOrConnectWithoutUserInput | ChatMessagesCreateOrConnectWithoutUserInput[]
+    createMany?: ChatMessagesCreateManyUserInputEnvelope
+    connect?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
   }
 
   export type ChannelModeratorCreateNestedManyWithoutUserInput = {
@@ -19541,6 +21151,13 @@ export namespace Prisma {
     connect?: SubIconSelectionWhereUniqueInput | SubIconSelectionWhereUniqueInput[]
   }
 
+  export type ChatMessagesUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChatMessagesCreateWithoutUserInput, ChatMessagesUncheckedCreateWithoutUserInput> | ChatMessagesCreateWithoutUserInput[] | ChatMessagesUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatMessagesCreateOrConnectWithoutUserInput | ChatMessagesCreateOrConnectWithoutUserInput[]
+    createMany?: ChatMessagesCreateManyUserInputEnvelope
+    connect?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+  }
+
   export type ChannelModeratorUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<ChannelModeratorCreateWithoutUserInput, ChannelModeratorUncheckedCreateWithoutUserInput> | ChannelModeratorCreateWithoutUserInput[] | ChannelModeratorUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ChannelModeratorCreateOrConnectWithoutUserInput | ChannelModeratorCreateOrConnectWithoutUserInput[]
@@ -19568,6 +21185,10 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type EnumThemeFieldUpdateOperationsInput = {
+    set?: $Enums.Theme
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -19656,6 +21277,20 @@ export namespace Prisma {
     update?: SubIconSelectionUpdateWithWhereUniqueWithoutUserInput | SubIconSelectionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: SubIconSelectionUpdateManyWithWhereWithoutUserInput | SubIconSelectionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: SubIconSelectionScalarWhereInput | SubIconSelectionScalarWhereInput[]
+  }
+
+  export type ChatMessagesUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChatMessagesCreateWithoutUserInput, ChatMessagesUncheckedCreateWithoutUserInput> | ChatMessagesCreateWithoutUserInput[] | ChatMessagesUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatMessagesCreateOrConnectWithoutUserInput | ChatMessagesCreateOrConnectWithoutUserInput[]
+    upsert?: ChatMessagesUpsertWithWhereUniqueWithoutUserInput | ChatMessagesUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChatMessagesCreateManyUserInputEnvelope
+    set?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    disconnect?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    delete?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    connect?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    update?: ChatMessagesUpdateWithWhereUniqueWithoutUserInput | ChatMessagesUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChatMessagesUpdateManyWithWhereWithoutUserInput | ChatMessagesUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChatMessagesScalarWhereInput | ChatMessagesScalarWhereInput[]
   }
 
   export type ChannelModeratorUpdateManyWithoutUserNestedInput = {
@@ -19780,6 +21415,20 @@ export namespace Prisma {
     deleteMany?: SubIconSelectionScalarWhereInput | SubIconSelectionScalarWhereInput[]
   }
 
+  export type ChatMessagesUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChatMessagesCreateWithoutUserInput, ChatMessagesUncheckedCreateWithoutUserInput> | ChatMessagesCreateWithoutUserInput[] | ChatMessagesUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatMessagesCreateOrConnectWithoutUserInput | ChatMessagesCreateOrConnectWithoutUserInput[]
+    upsert?: ChatMessagesUpsertWithWhereUniqueWithoutUserInput | ChatMessagesUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChatMessagesCreateManyUserInputEnvelope
+    set?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    disconnect?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    delete?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    connect?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    update?: ChatMessagesUpdateWithWhereUniqueWithoutUserInput | ChatMessagesUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChatMessagesUpdateManyWithWhereWithoutUserInput | ChatMessagesUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChatMessagesScalarWhereInput | ChatMessagesScalarWhereInput[]
+  }
+
   export type ChannelModeratorUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<ChannelModeratorCreateWithoutUserInput, ChannelModeratorUncheckedCreateWithoutUserInput> | ChannelModeratorCreateWithoutUserInput[] | ChannelModeratorUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ChannelModeratorCreateOrConnectWithoutUserInput | ChannelModeratorCreateOrConnectWithoutUserInput[]
@@ -19883,6 +21532,13 @@ export namespace Prisma {
     connect?: ChannelTagWhereUniqueInput | ChannelTagWhereUniqueInput[]
   }
 
+  export type ChatMessagesCreateNestedManyWithoutChannelInput = {
+    create?: XOR<ChatMessagesCreateWithoutChannelInput, ChatMessagesUncheckedCreateWithoutChannelInput> | ChatMessagesCreateWithoutChannelInput[] | ChatMessagesUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: ChatMessagesCreateOrConnectWithoutChannelInput | ChatMessagesCreateOrConnectWithoutChannelInput[]
+    createMany?: ChatMessagesCreateManyChannelInputEnvelope
+    connect?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+  }
+
   export type FollowUncheckedCreateNestedManyWithoutChannelInput = {
     create?: XOR<FollowCreateWithoutChannelInput, FollowUncheckedCreateWithoutChannelInput> | FollowCreateWithoutChannelInput[] | FollowUncheckedCreateWithoutChannelInput[]
     connectOrCreate?: FollowCreateOrConnectWithoutChannelInput | FollowCreateOrConnectWithoutChannelInput[]
@@ -19930,6 +21586,17 @@ export namespace Prisma {
     connectOrCreate?: ChannelTagCreateOrConnectWithoutChannelInput | ChannelTagCreateOrConnectWithoutChannelInput[]
     createMany?: ChannelTagCreateManyChannelInputEnvelope
     connect?: ChannelTagWhereUniqueInput | ChannelTagWhereUniqueInput[]
+  }
+
+  export type ChatMessagesUncheckedCreateNestedManyWithoutChannelInput = {
+    create?: XOR<ChatMessagesCreateWithoutChannelInput, ChatMessagesUncheckedCreateWithoutChannelInput> | ChatMessagesCreateWithoutChannelInput[] | ChatMessagesUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: ChatMessagesCreateOrConnectWithoutChannelInput | ChatMessagesCreateOrConnectWithoutChannelInput[]
+    createMany?: ChatMessagesCreateManyChannelInputEnvelope
+    connect?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type UserUpdateOneRequiredWithoutChannelNestedInput = {
@@ -20048,6 +21715,20 @@ export namespace Prisma {
     deleteMany?: ChannelTagScalarWhereInput | ChannelTagScalarWhereInput[]
   }
 
+  export type ChatMessagesUpdateManyWithoutChannelNestedInput = {
+    create?: XOR<ChatMessagesCreateWithoutChannelInput, ChatMessagesUncheckedCreateWithoutChannelInput> | ChatMessagesCreateWithoutChannelInput[] | ChatMessagesUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: ChatMessagesCreateOrConnectWithoutChannelInput | ChatMessagesCreateOrConnectWithoutChannelInput[]
+    upsert?: ChatMessagesUpsertWithWhereUniqueWithoutChannelInput | ChatMessagesUpsertWithWhereUniqueWithoutChannelInput[]
+    createMany?: ChatMessagesCreateManyChannelInputEnvelope
+    set?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    disconnect?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    delete?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    connect?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    update?: ChatMessagesUpdateWithWhereUniqueWithoutChannelInput | ChatMessagesUpdateWithWhereUniqueWithoutChannelInput[]
+    updateMany?: ChatMessagesUpdateManyWithWhereWithoutChannelInput | ChatMessagesUpdateManyWithWhereWithoutChannelInput[]
+    deleteMany?: ChatMessagesScalarWhereInput | ChatMessagesScalarWhereInput[]
+  }
+
   export type FollowUncheckedUpdateManyWithoutChannelNestedInput = {
     create?: XOR<FollowCreateWithoutChannelInput, FollowUncheckedCreateWithoutChannelInput> | FollowCreateWithoutChannelInput[] | FollowUncheckedCreateWithoutChannelInput[]
     connectOrCreate?: FollowCreateOrConnectWithoutChannelInput | FollowCreateOrConnectWithoutChannelInput[]
@@ -20144,6 +21825,20 @@ export namespace Prisma {
     update?: ChannelTagUpdateWithWhereUniqueWithoutChannelInput | ChannelTagUpdateWithWhereUniqueWithoutChannelInput[]
     updateMany?: ChannelTagUpdateManyWithWhereWithoutChannelInput | ChannelTagUpdateManyWithWhereWithoutChannelInput[]
     deleteMany?: ChannelTagScalarWhereInput | ChannelTagScalarWhereInput[]
+  }
+
+  export type ChatMessagesUncheckedUpdateManyWithoutChannelNestedInput = {
+    create?: XOR<ChatMessagesCreateWithoutChannelInput, ChatMessagesUncheckedCreateWithoutChannelInput> | ChatMessagesCreateWithoutChannelInput[] | ChatMessagesUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: ChatMessagesCreateOrConnectWithoutChannelInput | ChatMessagesCreateOrConnectWithoutChannelInput[]
+    upsert?: ChatMessagesUpsertWithWhereUniqueWithoutChannelInput | ChatMessagesUpsertWithWhereUniqueWithoutChannelInput[]
+    createMany?: ChatMessagesCreateManyChannelInputEnvelope
+    set?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    disconnect?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    delete?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    connect?: ChatMessagesWhereUniqueInput | ChatMessagesWhereUniqueInput[]
+    update?: ChatMessagesUpdateWithWhereUniqueWithoutChannelInput | ChatMessagesUpdateWithWhereUniqueWithoutChannelInput[]
+    updateMany?: ChatMessagesUpdateManyWithWhereWithoutChannelInput | ChatMessagesUpdateManyWithWhereWithoutChannelInput[]
+    deleteMany?: ChatMessagesScalarWhereInput | ChatMessagesScalarWhereInput[]
   }
 
   export type ChannelCreateNestedManyWithoutPrimaryCategoryInput = {
@@ -20732,6 +22427,34 @@ export namespace Prisma {
     update?: XOR<XOR<SubIconUpdateToOneWithWhereWithoutSelectionsInput, SubIconUpdateWithoutSelectionsInput>, SubIconUncheckedUpdateWithoutSelectionsInput>
   }
 
+  export type ChannelCreateNestedOneWithoutChatMessagesInput = {
+    create?: XOR<ChannelCreateWithoutChatMessagesInput, ChannelUncheckedCreateWithoutChatMessagesInput>
+    connectOrCreate?: ChannelCreateOrConnectWithoutChatMessagesInput
+    connect?: ChannelWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutChatMessagesInput = {
+    create?: XOR<UserCreateWithoutChatMessagesInput, UserUncheckedCreateWithoutChatMessagesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChatMessagesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ChannelUpdateOneRequiredWithoutChatMessagesNestedInput = {
+    create?: XOR<ChannelCreateWithoutChatMessagesInput, ChannelUncheckedCreateWithoutChatMessagesInput>
+    connectOrCreate?: ChannelCreateOrConnectWithoutChatMessagesInput
+    upsert?: ChannelUpsertWithoutChatMessagesInput
+    connect?: ChannelWhereUniqueInput
+    update?: XOR<XOR<ChannelUpdateToOneWithWhereWithoutChatMessagesInput, ChannelUpdateWithoutChatMessagesInput>, ChannelUncheckedUpdateWithoutChatMessagesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutChatMessagesNestedInput = {
+    create?: XOR<UserCreateWithoutChatMessagesInput, UserUncheckedCreateWithoutChatMessagesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChatMessagesInput
+    upsert?: UserUpsertWithoutChatMessagesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChatMessagesInput, UserUpdateWithoutChatMessagesInput>, UserUncheckedUpdateWithoutChatMessagesInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -20758,6 +22481,13 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedEnumThemeFilter<$PrismaModel = never> = {
+    equals?: $Enums.Theme | EnumThemeFieldRefInput<$PrismaModel>
+    in?: $Enums.Theme[] | ListEnumThemeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Theme[] | ListEnumThemeFieldRefInput<$PrismaModel>
+    not?: NestedEnumThemeFilter<$PrismaModel> | $Enums.Theme
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
@@ -20832,6 +22562,16 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedEnumThemeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Theme | EnumThemeFieldRefInput<$PrismaModel>
+    in?: $Enums.Theme[] | ListEnumThemeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Theme[] | ListEnumThemeFieldRefInput<$PrismaModel>
+    not?: NestedEnumThemeWithAggregatesFilter<$PrismaModel> | $Enums.Theme
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumThemeFilter<$PrismaModel>
+    _max?: NestedEnumThemeFilter<$PrismaModel>
+  }
+
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -20852,6 +22592,31 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumTagKindFilter<$PrismaModel = never> = {
@@ -21014,7 +22779,9 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -21027,6 +22794,7 @@ export namespace Prisma {
     subIcons?: SubIconCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelUncheckedCreateWithoutStreamerInput = {
@@ -21034,8 +22802,10 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     primaryCategoryId?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -21047,6 +22817,7 @@ export namespace Prisma {
     subIcons?: SubIconUncheckedCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagUncheckedCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelCreateOrConnectWithoutStreamerInput = {
@@ -21192,6 +22963,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ChatMessagesCreateWithoutUserInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    channel: ChannelCreateNestedOneWithoutChatMessagesInput
+  }
+
+  export type ChatMessagesUncheckedCreateWithoutUserInput = {
+    id?: string
+    channelId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type ChatMessagesCreateOrConnectWithoutUserInput = {
+    where: ChatMessagesWhereUniqueInput
+    create: XOR<ChatMessagesCreateWithoutUserInput, ChatMessagesUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChatMessagesCreateManyUserInputEnvelope = {
+    data: ChatMessagesCreateManyUserInput | ChatMessagesCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ChannelModeratorCreateWithoutUserInput = {
     createdAt?: Date | string
     channel: ChannelCreateNestedOneWithoutModeratorsInput
@@ -21288,7 +23083,9 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21301,6 +23098,7 @@ export namespace Prisma {
     subIcons?: SubIconUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelUncheckedUpdateWithoutStreamerInput = {
@@ -21308,8 +23106,10 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     primaryCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21321,6 +23121,7 @@ export namespace Prisma {
     subIcons?: SubIconUncheckedUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUncheckedUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUncheckedUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type FollowUpsertWithWhereUniqueWithoutUserInput = {
@@ -21467,6 +23268,33 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"SubIconSelection"> | Date | string
   }
 
+  export type ChatMessagesUpsertWithWhereUniqueWithoutUserInput = {
+    where: ChatMessagesWhereUniqueInput
+    update: XOR<ChatMessagesUpdateWithoutUserInput, ChatMessagesUncheckedUpdateWithoutUserInput>
+    create: XOR<ChatMessagesCreateWithoutUserInput, ChatMessagesUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChatMessagesUpdateWithWhereUniqueWithoutUserInput = {
+    where: ChatMessagesWhereUniqueInput
+    data: XOR<ChatMessagesUpdateWithoutUserInput, ChatMessagesUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ChatMessagesUpdateManyWithWhereWithoutUserInput = {
+    where: ChatMessagesScalarWhereInput
+    data: XOR<ChatMessagesUpdateManyMutationInput, ChatMessagesUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ChatMessagesScalarWhereInput = {
+    AND?: ChatMessagesScalarWhereInput | ChatMessagesScalarWhereInput[]
+    OR?: ChatMessagesScalarWhereInput[]
+    NOT?: ChatMessagesScalarWhereInput | ChatMessagesScalarWhereInput[]
+    id?: StringFilter<"ChatMessages"> | string
+    channelId?: StringFilter<"ChatMessages"> | string
+    userId?: StringFilter<"ChatMessages"> | string
+    content?: StringFilter<"ChatMessages"> | string
+    createdAt?: DateTimeFilter<"ChatMessages"> | Date | string
+  }
+
   export type ChannelModeratorUpsertWithWhereUniqueWithoutUserInput = {
     where: ChannelModeratorWhereUniqueInput
     update: XOR<ChannelModeratorUpdateWithoutUserInput, ChannelModeratorUncheckedUpdateWithoutUserInput>
@@ -21548,6 +23376,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -21557,6 +23387,7 @@ export namespace Prisma {
     createdEmojis?: EmojiCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestCreateNestedManyWithoutUserInput
@@ -21572,6 +23403,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -21581,6 +23414,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUncheckedCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconUncheckedCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorUncheckedCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorUncheckedCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestUncheckedCreateNestedManyWithoutUserInput
@@ -21812,6 +23646,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ChatMessagesCreateWithoutChannelInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutChatMessagesInput
+  }
+
+  export type ChatMessagesUncheckedCreateWithoutChannelInput = {
+    id?: string
+    userId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type ChatMessagesCreateOrConnectWithoutChannelInput = {
+    where: ChatMessagesWhereUniqueInput
+    create: XOR<ChatMessagesCreateWithoutChannelInput, ChatMessagesUncheckedCreateWithoutChannelInput>
+  }
+
+  export type ChatMessagesCreateManyChannelInputEnvelope = {
+    data: ChatMessagesCreateManyChannelInput | ChatMessagesCreateManyChannelInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutChannelInput = {
     update: XOR<UserUpdateWithoutChannelInput, UserUncheckedUpdateWithoutChannelInput>
     create: XOR<UserCreateWithoutChannelInput, UserUncheckedCreateWithoutChannelInput>
@@ -21833,6 +23691,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21842,6 +23702,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUpdateManyWithoutUserNestedInput
@@ -21857,6 +23718,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21866,6 +23729,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUncheckedUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUncheckedUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUncheckedUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUncheckedUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUncheckedUpdateManyWithoutUserNestedInput
@@ -22033,12 +23897,30 @@ export namespace Prisma {
     detectedAt?: DateTimeFilter<"ChannelTag"> | Date | string
   }
 
+  export type ChatMessagesUpsertWithWhereUniqueWithoutChannelInput = {
+    where: ChatMessagesWhereUniqueInput
+    update: XOR<ChatMessagesUpdateWithoutChannelInput, ChatMessagesUncheckedUpdateWithoutChannelInput>
+    create: XOR<ChatMessagesCreateWithoutChannelInput, ChatMessagesUncheckedCreateWithoutChannelInput>
+  }
+
+  export type ChatMessagesUpdateWithWhereUniqueWithoutChannelInput = {
+    where: ChatMessagesWhereUniqueInput
+    data: XOR<ChatMessagesUpdateWithoutChannelInput, ChatMessagesUncheckedUpdateWithoutChannelInput>
+  }
+
+  export type ChatMessagesUpdateManyWithWhereWithoutChannelInput = {
+    where: ChatMessagesScalarWhereInput
+    data: XOR<ChatMessagesUpdateManyMutationInput, ChatMessagesUncheckedUpdateManyWithoutChannelInput>
+  }
+
   export type ChannelCreateWithoutPrimaryCategoryInput = {
     id?: string
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -22051,6 +23933,7 @@ export namespace Prisma {
     subIcons?: SubIconCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelUncheckedCreateWithoutPrimaryCategoryInput = {
@@ -22059,7 +23942,9 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -22071,6 +23956,7 @@ export namespace Prisma {
     subIcons?: SubIconUncheckedCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagUncheckedCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelCreateOrConnectWithoutPrimaryCategoryInput = {
@@ -22160,8 +24046,10 @@ export namespace Prisma {
     streamTitle?: StringNullableFilter<"Channel"> | string | null
     streamDescription?: StringNullableFilter<"Channel"> | string | null
     thumbnailUrl?: StringNullableFilter<"Channel"> | string | null
+    bannerKey?: StringNullableFilter<"Channel"> | string | null
     primaryCategoryId?: StringNullableFilter<"Channel"> | string | null
     isLive?: BoolFilter<"Channel"> | boolean
+    liveStartedAt?: DateTimeNullableFilter<"Channel"> | Date | string | null
     blocked?: BoolFilter<"Channel"> | boolean
     streamKeyHash?: StringNullableFilter<"Channel"> | string | null
     createdAt?: DateTimeFilter<"Channel"> | Date | string
@@ -22205,7 +24093,9 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -22218,6 +24108,7 @@ export namespace Prisma {
     emojis?: EmojiCreateNestedManyWithoutChannelInput
     subIcons?: SubIconCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelUncheckedCreateWithoutChannelTagsInput = {
@@ -22226,8 +24117,10 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     primaryCategoryId?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -22238,6 +24131,7 @@ export namespace Prisma {
     emojis?: EmojiUncheckedCreateNestedManyWithoutChannelInput
     subIcons?: SubIconUncheckedCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelCreateOrConnectWithoutChannelTagsInput = {
@@ -22294,7 +24188,9 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22307,6 +24203,7 @@ export namespace Prisma {
     emojis?: EmojiUpdateManyWithoutChannelNestedInput
     subIcons?: SubIconUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelUncheckedUpdateWithoutChannelTagsInput = {
@@ -22315,8 +24212,10 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     primaryCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22327,6 +24226,7 @@ export namespace Prisma {
     emojis?: EmojiUncheckedUpdateManyWithoutChannelNestedInput
     subIcons?: SubIconUncheckedUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUncheckedUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type TagUpsertWithoutChannelTagsInput = {
@@ -22378,6 +24278,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -22388,6 +24290,7 @@ export namespace Prisma {
     createdEmojis?: EmojiCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorCreateNestedManyWithoutAssignedByInput
   }
@@ -22402,6 +24305,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -22412,6 +24317,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUncheckedCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconUncheckedCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorUncheckedCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorUncheckedCreateNestedManyWithoutAssignedByInput
   }
@@ -22475,6 +24381,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22485,6 +24393,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUpdateManyWithoutAssignedByNestedInput
   }
@@ -22499,6 +24408,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22509,6 +24420,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUncheckedUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUncheckedUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUncheckedUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUncheckedUpdateManyWithoutAssignedByNestedInput
   }
@@ -22562,6 +24474,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -22571,6 +24485,7 @@ export namespace Prisma {
     createdEmojis?: EmojiCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestCreateNestedManyWithoutUserInput
@@ -22586,6 +24501,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -22595,6 +24512,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUncheckedCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconUncheckedCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorUncheckedCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorUncheckedCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestUncheckedCreateNestedManyWithoutUserInput
@@ -22610,7 +24528,9 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -22623,6 +24543,7 @@ export namespace Prisma {
     subIcons?: SubIconCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelUncheckedCreateWithoutFollowersInput = {
@@ -22631,8 +24552,10 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     primaryCategoryId?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -22643,6 +24566,7 @@ export namespace Prisma {
     subIcons?: SubIconUncheckedCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagUncheckedCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelCreateOrConnectWithoutFollowersInput = {
@@ -22671,6 +24595,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22680,6 +24606,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUpdateManyWithoutUserNestedInput
@@ -22695,6 +24622,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22704,6 +24633,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUncheckedUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUncheckedUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUncheckedUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUncheckedUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUncheckedUpdateManyWithoutUserNestedInput
@@ -22725,7 +24655,9 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22738,6 +24670,7 @@ export namespace Prisma {
     subIcons?: SubIconUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelUncheckedUpdateWithoutFollowersInput = {
@@ -22746,8 +24679,10 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     primaryCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22758,6 +24693,7 @@ export namespace Prisma {
     subIcons?: SubIconUncheckedUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUncheckedUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUncheckedUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type UserCreateWithoutSubscriptionsInput = {
@@ -22770,6 +24706,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -22779,6 +24717,7 @@ export namespace Prisma {
     createdEmojis?: EmojiCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestCreateNestedManyWithoutUserInput
@@ -22794,6 +24733,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -22803,6 +24744,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUncheckedCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconUncheckedCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorUncheckedCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorUncheckedCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestUncheckedCreateNestedManyWithoutUserInput
@@ -22818,7 +24760,9 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -22831,6 +24775,7 @@ export namespace Prisma {
     subIcons?: SubIconCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelUncheckedCreateWithoutSubscriptionsInput = {
@@ -22839,8 +24784,10 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     primaryCategoryId?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -22851,6 +24798,7 @@ export namespace Prisma {
     subIcons?: SubIconUncheckedCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagUncheckedCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelCreateOrConnectWithoutSubscriptionsInput = {
@@ -22879,6 +24827,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22888,6 +24838,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUpdateManyWithoutUserNestedInput
@@ -22903,6 +24854,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22912,6 +24865,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUncheckedUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUncheckedUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUncheckedUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUncheckedUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUncheckedUpdateManyWithoutUserNestedInput
@@ -22933,7 +24887,9 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22946,6 +24902,7 @@ export namespace Prisma {
     subIcons?: SubIconUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelUncheckedUpdateWithoutSubscriptionsInput = {
@@ -22954,8 +24911,10 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     primaryCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22966,6 +24925,7 @@ export namespace Prisma {
     subIcons?: SubIconUncheckedUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUncheckedUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUncheckedUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type UserCreateWithoutModeratedChannelsInput = {
@@ -22978,6 +24938,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -22988,6 +24950,7 @@ export namespace Prisma {
     createdEmojis?: EmojiCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestCreateNestedManyWithoutUserInput
   }
@@ -23002,6 +24965,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -23012,6 +24977,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUncheckedCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconUncheckedCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorUncheckedCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestUncheckedCreateNestedManyWithoutUserInput
   }
@@ -23026,7 +24992,9 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -23039,6 +25007,7 @@ export namespace Prisma {
     subIcons?: SubIconCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelUncheckedCreateWithoutModeratorsInput = {
@@ -23047,8 +25016,10 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     primaryCategoryId?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -23059,6 +25030,7 @@ export namespace Prisma {
     subIcons?: SubIconUncheckedCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagUncheckedCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelCreateOrConnectWithoutModeratorsInput = {
@@ -23076,6 +25048,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -23086,6 +25060,7 @@ export namespace Prisma {
     createdEmojis?: EmojiCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorCreateNestedManyWithoutUserInput
     tagInterests?: UserTagInterestCreateNestedManyWithoutUserInput
   }
@@ -23100,6 +25075,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -23110,6 +25087,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUncheckedCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconUncheckedCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorUncheckedCreateNestedManyWithoutUserInput
     tagInterests?: UserTagInterestUncheckedCreateNestedManyWithoutUserInput
   }
@@ -23206,6 +25184,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23216,6 +25196,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUpdateManyWithoutUserNestedInput
   }
@@ -23230,6 +25211,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23240,6 +25223,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUncheckedUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUncheckedUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUncheckedUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -23260,7 +25244,9 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23273,6 +25259,7 @@ export namespace Prisma {
     subIcons?: SubIconUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelUncheckedUpdateWithoutModeratorsInput = {
@@ -23281,8 +25268,10 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     primaryCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23293,6 +25282,7 @@ export namespace Prisma {
     subIcons?: SubIconUncheckedUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUncheckedUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUncheckedUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type UserUpsertWithoutAssignedModeratorsInput = {
@@ -23316,6 +25306,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23326,6 +25318,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUpdateManyWithoutUserNestedInput
     tagInterests?: UserTagInterestUpdateManyWithoutUserNestedInput
   }
@@ -23340,6 +25333,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23350,6 +25345,7 @@ export namespace Prisma {
     createdEmojis?: EmojiUncheckedUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUncheckedUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUncheckedUpdateManyWithoutUserNestedInput
     tagInterests?: UserTagInterestUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -23391,7 +25387,9 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -23404,6 +25402,7 @@ export namespace Prisma {
     subIcons?: SubIconCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelUncheckedCreateWithoutEmojisInput = {
@@ -23412,8 +25411,10 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     primaryCategoryId?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -23424,6 +25425,7 @@ export namespace Prisma {
     subIcons?: SubIconUncheckedCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagUncheckedCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelCreateOrConnectWithoutEmojisInput = {
@@ -23441,6 +25443,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -23450,6 +25454,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
     createdSubIcons?: SubIconCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestCreateNestedManyWithoutUserInput
@@ -23465,6 +25470,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -23474,6 +25481,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
     createdSubIcons?: SubIconUncheckedCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorUncheckedCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorUncheckedCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestUncheckedCreateNestedManyWithoutUserInput
@@ -23521,7 +25529,9 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23534,6 +25544,7 @@ export namespace Prisma {
     subIcons?: SubIconUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelUncheckedUpdateWithoutEmojisInput = {
@@ -23542,8 +25553,10 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     primaryCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23554,6 +25567,7 @@ export namespace Prisma {
     subIcons?: SubIconUncheckedUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUncheckedUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUncheckedUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type UserUpsertWithoutCreatedEmojisInput = {
@@ -23577,6 +25591,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23586,6 +25602,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
     createdSubIcons?: SubIconUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUpdateManyWithoutUserNestedInput
@@ -23601,6 +25618,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23610,6 +25629,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
     createdSubIcons?: SubIconUncheckedUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUncheckedUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUncheckedUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUncheckedUpdateManyWithoutUserNestedInput
@@ -23647,7 +25667,9 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -23660,6 +25682,7 @@ export namespace Prisma {
     emojis?: EmojiCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelUncheckedCreateWithoutSubIconsInput = {
@@ -23668,8 +25691,10 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     primaryCategoryId?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -23680,6 +25705,7 @@ export namespace Prisma {
     emojis?: EmojiUncheckedCreateNestedManyWithoutChannelInput
     subIconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagUncheckedCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelCreateOrConnectWithoutSubIconsInput = {
@@ -23697,6 +25723,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -23706,6 +25734,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
     createdEmojis?: EmojiCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestCreateNestedManyWithoutUserInput
@@ -23721,6 +25750,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -23730,6 +25761,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
     createdEmojis?: EmojiUncheckedCreateNestedManyWithoutCreatorInput
     iconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorUncheckedCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorUncheckedCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestUncheckedCreateNestedManyWithoutUserInput
@@ -23799,7 +25831,9 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23812,6 +25846,7 @@ export namespace Prisma {
     emojis?: EmojiUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelUncheckedUpdateWithoutSubIconsInput = {
@@ -23820,8 +25855,10 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     primaryCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23832,6 +25869,7 @@ export namespace Prisma {
     emojis?: EmojiUncheckedUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUncheckedUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUncheckedUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type UserUpsertWithoutCreatedSubIconsInput = {
@@ -23855,6 +25893,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23864,6 +25904,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
     createdEmojis?: EmojiUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUpdateManyWithoutUserNestedInput
@@ -23879,6 +25920,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23888,6 +25931,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
     createdEmojis?: EmojiUncheckedUpdateManyWithoutCreatorNestedInput
     iconSelections?: SubIconSelectionUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUncheckedUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUncheckedUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUncheckedUpdateManyWithoutUserNestedInput
@@ -23946,6 +25990,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -23955,6 +26001,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
     createdEmojis?: EmojiCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconCreateNestedManyWithoutCreatorInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestCreateNestedManyWithoutUserInput
@@ -23970,6 +26017,8 @@ export namespace Prisma {
     bio?: string | null
     platform?: string | null
     language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
     isEmailVerified?: boolean
     blocked?: boolean
     createdAt?: Date | string
@@ -23979,6 +26028,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
     createdEmojis?: EmojiUncheckedCreateNestedManyWithoutCreatorInput
     createdSubIcons?: SubIconUncheckedCreateNestedManyWithoutCreatorInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutUserInput
     moderatedChannels?: ChannelModeratorUncheckedCreateNestedManyWithoutUserInput
     assignedModerators?: ChannelModeratorUncheckedCreateNestedManyWithoutAssignedByInput
     tagInterests?: UserTagInterestUncheckedCreateNestedManyWithoutUserInput
@@ -23994,7 +26044,9 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -24007,6 +26059,7 @@ export namespace Prisma {
     emojis?: EmojiCreateNestedManyWithoutChannelInput
     subIcons?: SubIconCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelUncheckedCreateWithoutSubIconSelectionsInput = {
@@ -24015,8 +26068,10 @@ export namespace Prisma {
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     primaryCategoryId?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -24027,6 +26082,7 @@ export namespace Prisma {
     emojis?: EmojiUncheckedCreateNestedManyWithoutChannelInput
     subIcons?: SubIconUncheckedCreateNestedManyWithoutChannelInput
     channelTags?: ChannelTagUncheckedCreateNestedManyWithoutChannelInput
+    chatMessages?: ChatMessagesUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelCreateOrConnectWithoutSubIconSelectionsInput = {
@@ -24085,6 +26141,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24094,6 +26152,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
     createdEmojis?: EmojiUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUpdateManyWithoutCreatorNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUpdateManyWithoutUserNestedInput
@@ -24109,6 +26168,8 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: NullableStringFieldUpdateOperationsInput | string | null
     language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     blocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24118,6 +26179,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
     createdEmojis?: EmojiUncheckedUpdateManyWithoutCreatorNestedInput
     createdSubIcons?: SubIconUncheckedUpdateManyWithoutCreatorNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutUserNestedInput
     moderatedChannels?: ChannelModeratorUncheckedUpdateManyWithoutUserNestedInput
     assignedModerators?: ChannelModeratorUncheckedUpdateManyWithoutAssignedByNestedInput
     tagInterests?: UserTagInterestUncheckedUpdateManyWithoutUserNestedInput
@@ -24139,7 +26201,9 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24152,6 +26216,7 @@ export namespace Prisma {
     emojis?: EmojiUpdateManyWithoutChannelNestedInput
     subIcons?: SubIconUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelUncheckedUpdateWithoutSubIconSelectionsInput = {
@@ -24160,8 +26225,10 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     primaryCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24172,6 +26239,7 @@ export namespace Prisma {
     emojis?: EmojiUncheckedUpdateManyWithoutChannelNestedInput
     subIcons?: SubIconUncheckedUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUncheckedUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type SubIconUpsertWithoutSelectionsInput = {
@@ -24208,6 +26276,238 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     channelModeratorUserId?: NullableStringFieldUpdateOperationsInput | string | null
     channelModeratorChannelId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ChannelCreateWithoutChatMessagesInput = {
+    id?: string
+    streamTitle?: string | null
+    streamDescription?: string | null
+    thumbnailUrl?: string | null
+    bannerKey?: string | null
+    isLive?: boolean
+    liveStartedAt?: Date | string | null
+    blocked?: boolean
+    streamKeyHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    streamer: UserCreateNestedOneWithoutChannelInput
+    primaryCategory?: TagCreateNestedOneWithoutPrimaryChannelsInput
+    followers?: FollowCreateNestedManyWithoutChannelInput
+    subscriptions?: SubscriptionCreateNestedManyWithoutChannelInput
+    moderators?: ChannelModeratorCreateNestedManyWithoutChannelInput
+    emojis?: EmojiCreateNestedManyWithoutChannelInput
+    subIcons?: SubIconCreateNestedManyWithoutChannelInput
+    subIconSelections?: SubIconSelectionCreateNestedManyWithoutChannelInput
+    channelTags?: ChannelTagCreateNestedManyWithoutChannelInput
+  }
+
+  export type ChannelUncheckedCreateWithoutChatMessagesInput = {
+    id?: string
+    streamerId: string
+    streamTitle?: string | null
+    streamDescription?: string | null
+    thumbnailUrl?: string | null
+    bannerKey?: string | null
+    primaryCategoryId?: string | null
+    isLive?: boolean
+    liveStartedAt?: Date | string | null
+    blocked?: boolean
+    streamKeyHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    followers?: FollowUncheckedCreateNestedManyWithoutChannelInput
+    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutChannelInput
+    moderators?: ChannelModeratorUncheckedCreateNestedManyWithoutChannelInput
+    emojis?: EmojiUncheckedCreateNestedManyWithoutChannelInput
+    subIcons?: SubIconUncheckedCreateNestedManyWithoutChannelInput
+    subIconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutChannelInput
+    channelTags?: ChannelTagUncheckedCreateNestedManyWithoutChannelInput
+  }
+
+  export type ChannelCreateOrConnectWithoutChatMessagesInput = {
+    where: ChannelWhereUniqueInput
+    create: XOR<ChannelCreateWithoutChatMessagesInput, ChannelUncheckedCreateWithoutChatMessagesInput>
+  }
+
+  export type UserCreateWithoutChatMessagesInput = {
+    id?: string
+    email: string
+    password: string
+    username: string
+    displayName: string
+    avatar?: string | null
+    bio?: string | null
+    platform?: string | null
+    language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
+    isEmailVerified?: boolean
+    blocked?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    channel?: ChannelCreateNestedOneWithoutStreamerInput
+    following?: FollowCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
+    createdEmojis?: EmojiCreateNestedManyWithoutCreatorInput
+    createdSubIcons?: SubIconCreateNestedManyWithoutCreatorInput
+    iconSelections?: SubIconSelectionCreateNestedManyWithoutUserInput
+    moderatedChannels?: ChannelModeratorCreateNestedManyWithoutUserInput
+    assignedModerators?: ChannelModeratorCreateNestedManyWithoutAssignedByInput
+    tagInterests?: UserTagInterestCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutChatMessagesInput = {
+    id?: string
+    email: string
+    password: string
+    username: string
+    displayName: string
+    avatar?: string | null
+    bio?: string | null
+    platform?: string | null
+    language?: string | null
+    theme?: $Enums.Theme
+    onboardingCompleted?: boolean
+    isEmailVerified?: boolean
+    blocked?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    channel?: ChannelUncheckedCreateNestedOneWithoutStreamerInput
+    following?: FollowUncheckedCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
+    createdEmojis?: EmojiUncheckedCreateNestedManyWithoutCreatorInput
+    createdSubIcons?: SubIconUncheckedCreateNestedManyWithoutCreatorInput
+    iconSelections?: SubIconSelectionUncheckedCreateNestedManyWithoutUserInput
+    moderatedChannels?: ChannelModeratorUncheckedCreateNestedManyWithoutUserInput
+    assignedModerators?: ChannelModeratorUncheckedCreateNestedManyWithoutAssignedByInput
+    tagInterests?: UserTagInterestUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutChatMessagesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutChatMessagesInput, UserUncheckedCreateWithoutChatMessagesInput>
+  }
+
+  export type ChannelUpsertWithoutChatMessagesInput = {
+    update: XOR<ChannelUpdateWithoutChatMessagesInput, ChannelUncheckedUpdateWithoutChatMessagesInput>
+    create: XOR<ChannelCreateWithoutChatMessagesInput, ChannelUncheckedCreateWithoutChatMessagesInput>
+    where?: ChannelWhereInput
+  }
+
+  export type ChannelUpdateToOneWithWhereWithoutChatMessagesInput = {
+    where?: ChannelWhereInput
+    data: XOR<ChannelUpdateWithoutChatMessagesInput, ChannelUncheckedUpdateWithoutChatMessagesInput>
+  }
+
+  export type ChannelUpdateWithoutChatMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
+    isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
+    streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    streamer?: UserUpdateOneRequiredWithoutChannelNestedInput
+    primaryCategory?: TagUpdateOneWithoutPrimaryChannelsNestedInput
+    followers?: FollowUpdateManyWithoutChannelNestedInput
+    subscriptions?: SubscriptionUpdateManyWithoutChannelNestedInput
+    moderators?: ChannelModeratorUpdateManyWithoutChannelNestedInput
+    emojis?: EmojiUpdateManyWithoutChannelNestedInput
+    subIcons?: SubIconUpdateManyWithoutChannelNestedInput
+    subIconSelections?: SubIconSelectionUpdateManyWithoutChannelNestedInput
+    channelTags?: ChannelTagUpdateManyWithoutChannelNestedInput
+  }
+
+  export type ChannelUncheckedUpdateWithoutChatMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    streamerId?: StringFieldUpdateOperationsInput | string
+    streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
+    streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    followers?: FollowUncheckedUpdateManyWithoutChannelNestedInput
+    subscriptions?: SubscriptionUncheckedUpdateManyWithoutChannelNestedInput
+    moderators?: ChannelModeratorUncheckedUpdateManyWithoutChannelNestedInput
+    emojis?: EmojiUncheckedUpdateManyWithoutChannelNestedInput
+    subIcons?: SubIconUncheckedUpdateManyWithoutChannelNestedInput
+    subIconSelections?: SubIconSelectionUncheckedUpdateManyWithoutChannelNestedInput
+    channelTags?: ChannelTagUncheckedUpdateManyWithoutChannelNestedInput
+  }
+
+  export type UserUpsertWithoutChatMessagesInput = {
+    update: XOR<UserUpdateWithoutChatMessagesInput, UserUncheckedUpdateWithoutChatMessagesInput>
+    create: XOR<UserCreateWithoutChatMessagesInput, UserUncheckedCreateWithoutChatMessagesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutChatMessagesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutChatMessagesInput, UserUncheckedUpdateWithoutChatMessagesInput>
+  }
+
+  export type UserUpdateWithoutChatMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    displayName?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
+    blocked?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    channel?: ChannelUpdateOneWithoutStreamerNestedInput
+    following?: FollowUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
+    createdEmojis?: EmojiUpdateManyWithoutCreatorNestedInput
+    createdSubIcons?: SubIconUpdateManyWithoutCreatorNestedInput
+    iconSelections?: SubIconSelectionUpdateManyWithoutUserNestedInput
+    moderatedChannels?: ChannelModeratorUpdateManyWithoutUserNestedInput
+    assignedModerators?: ChannelModeratorUpdateManyWithoutAssignedByNestedInput
+    tagInterests?: UserTagInterestUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutChatMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    displayName?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: EnumThemeFieldUpdateOperationsInput | $Enums.Theme
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
+    blocked?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    channel?: ChannelUncheckedUpdateOneWithoutStreamerNestedInput
+    following?: FollowUncheckedUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    createdEmojis?: EmojiUncheckedUpdateManyWithoutCreatorNestedInput
+    createdSubIcons?: SubIconUncheckedUpdateManyWithoutCreatorNestedInput
+    iconSelections?: SubIconSelectionUncheckedUpdateManyWithoutUserNestedInput
+    moderatedChannels?: ChannelModeratorUncheckedUpdateManyWithoutUserNestedInput
+    assignedModerators?: ChannelModeratorUncheckedUpdateManyWithoutAssignedByNestedInput
+    tagInterests?: UserTagInterestUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FollowCreateManyUserInput = {
@@ -24252,6 +26552,13 @@ export namespace Prisma {
     channelId: string
     subIconId: string
     updatedAt?: Date | string
+  }
+
+  export type ChatMessagesCreateManyUserInput = {
+    id?: string
+    channelId: string
+    content: string
+    createdAt?: Date | string
   }
 
   export type ChannelModeratorCreateManyUserInput = {
@@ -24407,6 +26714,27 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ChatMessagesUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    channel?: ChannelUpdateOneRequiredWithoutChatMessagesNestedInput
+  }
+
+  export type ChatMessagesUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    channelId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChatMessagesUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    channelId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ChannelModeratorUpdateWithoutUserInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     channel?: ChannelUpdateOneRequiredWithoutModeratorsNestedInput
@@ -24533,6 +26861,13 @@ export namespace Prisma {
     source?: $Enums.TagSource
     confidence?: number | null
     detectedAt?: Date | string
+  }
+
+  export type ChatMessagesCreateManyChannelInput = {
+    id?: string
+    userId: string
+    content: string
+    createdAt?: Date | string
   }
 
   export type FollowUpdateWithoutChannelInput = {
@@ -24710,13 +27045,36 @@ export namespace Prisma {
     detectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ChatMessagesUpdateWithoutChannelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutChatMessagesNestedInput
+  }
+
+  export type ChatMessagesUncheckedUpdateWithoutChannelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChatMessagesUncheckedUpdateManyWithoutChannelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ChannelCreateManyPrimaryCategoryInput = {
     id?: string
     streamerId: string
     streamTitle?: string | null
     streamDescription?: string | null
     thumbnailUrl?: string | null
+    bannerKey?: string | null
     isLive?: boolean
+    liveStartedAt?: Date | string | null
     blocked?: boolean
     streamKeyHash?: string | null
     createdAt?: Date | string
@@ -24744,7 +27102,9 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24757,6 +27117,7 @@ export namespace Prisma {
     subIcons?: SubIconUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelUncheckedUpdateWithoutPrimaryCategoryInput = {
@@ -24765,7 +27126,9 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24777,6 +27140,7 @@ export namespace Prisma {
     subIcons?: SubIconUncheckedUpdateManyWithoutChannelNestedInput
     subIconSelections?: SubIconSelectionUncheckedUpdateManyWithoutChannelNestedInput
     channelTags?: ChannelTagUncheckedUpdateManyWithoutChannelNestedInput
+    chatMessages?: ChatMessagesUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelUncheckedUpdateManyWithoutPrimaryCategoryInput = {
@@ -24785,7 +27149,9 @@ export namespace Prisma {
     streamTitle?: NullableStringFieldUpdateOperationsInput | string | null
     streamDescription?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerKey?: NullableStringFieldUpdateOperationsInput | string | null
     isLive?: BoolFieldUpdateOperationsInput | boolean
+    liveStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
     streamKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

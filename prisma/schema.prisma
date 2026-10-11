@@ -21,6 +21,11 @@ model User {
   platform String?
   language String?
 
+  /** Тема интерфейса; хранится на сервере, чтобы совпадала на всех устройствах. */
+  theme               Theme   @default(DARK)
+  /** Онбординг (выбор интересов) пройден — больше не показываем. */
+  onboardingCompleted Boolean @default(false) @map("onboarding_completed")
+
   isEmailVerified Boolean @default(false) @map("is_email_verified")
   blocked         Boolean @default(false)
 
@@ -29,11 +34,12 @@ model User {
 
   channel Channel?
 
-  following      Follow[]
-  subscriptions  Subscription[]
-  createdEmojis  Emoji[]            @relation("emojiCreator")
-  createdSubIcons SubIcon[]         @relation("subIconCreator")
-  iconSelections SubIconSelection[]
+  following       Follow[]
+  subscriptions   Subscription[]
+  createdEmojis   Emoji[]            @relation("emojiCreator")
+  createdSubIcons SubIcon[]          @relation("subIconCreator")
+  iconSelections  SubIconSelection[]
+  chatMessages    ChatMessages[]
 
   moderatedChannels  ChannelModerator[] @relation("moderator")
   assignedModerators ChannelModerator[] @relation("assignedBy")
@@ -51,6 +57,8 @@ model Channel {
   streamTitle       String?
   streamDescription String?
   thumbnailUrl      String? @map("thumbnail_url")
+  /** Ключ объекта в S3 (не URL): публичный адрес собирается из S3_PUBLIC_URL. */
+  bannerKey         String? @map("banner_key")
 
   // Текущий раздел трансляции для каталога/главной (Tag с kind = CATEGORY), как "Playing: CS2" на Twitch.
   // Можно менять при каждом старте стрима, не влияет на список тегов ниже.
@@ -58,6 +66,8 @@ model Channel {
   primaryCategory   Tag?    @relation(fields: [primaryCategoryId], references: [id], onDelete: SetNull)
 
   isLive        Boolean @default(false) @map("is_live")
+  /** Когда начался текущий эфир; null — канал не в эфире. Для «в эфире 1:23». */
+  liveStartedAt DateTime? @map("live_started_at")
   blocked       Boolean @default(false)
   streamKeyHash String? @unique @map("stream_key_hash")
 
@@ -71,6 +81,7 @@ model Channel {
   subIcons          SubIcon[]
   subIconSelections SubIconSelection[]
   channelTags       ChannelTag[]
+  chatMessages      ChatMessages[]
 
   @@index([primaryCategoryId, isLive])
   @@map("channels")
@@ -308,4 +319,23 @@ model EmailVerification {
   attempts     Int    @default(0)
 
   @@map("email_verifications")
+}
+
+model ChatMessages {
+  id        String   @id @default(uuid(7))
+  channelId String   @map("channel_id")
+  userId    String   @map("user_id")
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([channelId, createdAt])
+  @@map("chat_messages")
+}
+
+enum Theme {
+  DARK
+  LIGHT
 }

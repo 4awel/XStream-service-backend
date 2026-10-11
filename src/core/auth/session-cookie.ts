@@ -27,7 +27,8 @@ export const readSameSite = (config: ConfigService): SameSite => {
 
 /** Намеренно узкий тип: подходит и express-session, и res.clearCookie. */
 export interface SessionCookieOptions {
-  domain: string;
+  /** undefined — cookie без Domain, браузер привяжет её к хосту ответа. */
+  domain: string | undefined;
   path: string;
   httpOnly: boolean;
   secure: boolean;
@@ -45,7 +46,9 @@ export interface SessionCookieOptions {
 export const sessionCookieOptions = (
   config: ConfigService,
 ): SessionCookieOptions => ({
-  domain: config.getOrThrow<string>("SESSION_DOMAIN"),
+  // Пустое значение — без Domain. Нужно, когда API проксируется через домен
+  // фронта (Netlify -> Render): cookie должна принадлежать домену фронта.
+  domain: config.get<string>("SESSION_DOMAIN")?.trim() || undefined,
   path: SESSION_COOKIE_PATH,
   httpOnly: parseBoolean(config.getOrThrow<string>("SESSION_HTTP_ONLY")),
   secure: parseBoolean(config.getOrThrow<string>("SESSION_SECURE")),
