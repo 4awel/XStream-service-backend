@@ -16,7 +16,12 @@ export type UserProps = {
 
   isEmailVerified: boolean;
   blocked: boolean;
+
+  theme: Theme;
+  onboardingCompleted: boolean;
 };
+
+export type Theme = "DARK" | "LIGHT";
 
 export class User {
   constructor(private readonly props: UserProps) {}
@@ -67,6 +72,19 @@ export class User {
 
   get blocked(): boolean {
     return this.props.blocked;
+  }
+
+  /** Ключ объекта в S3, не URL. */
+  get avatarKey(): string | null {
+    return this.props.avatar;
+  }
+
+  get theme(): Theme {
+    return this.props.theme;
+  }
+
+  get onboardingCompleted(): boolean {
+    return this.props.onboardingCompleted;
   }
 
   get password(): string {

@@ -16,9 +16,11 @@ export class PrismaChannelMapper {
       streamDescription: channelPrisma.streamDescription,
       thumbnailUrl: channelPrisma.thumbnailUrl,
       isLive: channelPrisma.isLive,
+      liveStartedAt: channelPrisma.liveStartedAt,
       blocked: channelPrisma.blocked,
       streamHashKey: channelPrisma.streamKeyHash,
       primaryCategoryId: channelPrisma.primaryCategoryId,
+      bannerKey: channelPrisma.bannerKey,
       createdAt: channelPrisma.createdAt,
       updatedAt: channelPrisma.updatedAt,
     });

@@ -22,6 +22,8 @@ export class PrismaUserMapper {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       password: user.password,
+      theme: user.theme,
+      onboardingCompleted: user.onboardingCompleted,
     };
   }
 
@@ -40,6 +42,8 @@ export class PrismaUserMapper {
       isEmailVerified: userPrismaData.isEmailVerified,
       blocked: userPrismaData.blocked,
       password: userPrismaData.password,
+      theme: userPrismaData.theme,
+      onboardingCompleted: userPrismaData.onboardingCompleted,
     });
   }
 }

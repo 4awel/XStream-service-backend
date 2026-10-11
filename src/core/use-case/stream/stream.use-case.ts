@@ -17,13 +17,7 @@ export class StreamUseCase {
     @Inject(IDataServices) private readonly dataService: IDataServices,
   ) {}
 
-  /**
-   * Пускать ли клиента. Молча вернуться = разрешить, исключение = запретить:
-   * MediaMTX считает запретом любой ответ, кроме 2xx.
-   */
   async authorize(input: MediaMtxAuthInput): Promise<void> {
-    // Просмотр публичный (в mediamtx.yml action: read вообще исключён из проверки),
-    // так что здесь остаётся только публикация.
     if (input.action !== "publish") {
       return;
     }
@@ -79,21 +73,17 @@ export class StreamUseCase {
       this.logger.warn(`Вебхук про неизвестный канал ${channelId}`);
       return;
     }
+    await this.dataService.chat.deleteByChannelIds([channelId]);
 
     this.logger.log(`Канал ${channelId}: isLive=${isLive}`);
   }
-
-  /**
-   * Приводит isLive к тому, что реально происходит на MediaMTX.
-   * Нужно потому, что вебхук теряется, если бэкенд в этот момент перезапускался,
-   * и канал навсегда остаётся «в эфире».
-   */
   async syncLive(livePaths: string[]): Promise<void> {
     const channelIds = livePaths
       .map((path) => channelIdFromPath(path))
       .filter((id): id is string => id !== null);
 
-    await this.dataService.channel.syncLive(channelIds);
+    const wentOffline = await this.dataService.channel.syncLive(channelIds);
+    await this.dataService.chat.deleteByChannelIds(wentOffline);
   }
 
   /** never, чтобы TypeScript понимал: после вызова выполнение не продолжается. */

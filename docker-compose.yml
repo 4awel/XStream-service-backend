@@ -62,9 +62,28 @@ services:
     networks:
       - stream-services-backend
 
+  # S3-совместимое хранилище: аватарки, шапки каналов, позже эмодзи.
+  # API на 9000, веб-консоль на http://localhost:9001 (логин/пароль ниже).
+  minio:
+    container_name: minio
+    image: minio/minio:latest
+    restart: always
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY:-minioadmin}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - stream-services-backend
+
 volumes:
   postgres_data:
   redis_data:
+  minio_data:
 
 networks:
   stream-services-backend:

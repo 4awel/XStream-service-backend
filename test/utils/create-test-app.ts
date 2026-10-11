@@ -8,10 +8,7 @@ import { PrismaService } from "@/core/prisma/prisma.service";
 import { RedisService } from "@/core/redis/redis.service";
 import { setupApp } from "@/setup-app";
 
-/**
- * Подделка почты: вместо SMTP запоминает код в памяти.
- * Это и есть замена шагу "прочитай письмо и введи 6 цифр" из bash-скрипта.
- */
+
 export class FakeMailService {
   /** email -> последний отправленный код */
   readonly sentCodes = new Map<string, string>();
@@ -45,8 +42,6 @@ export async function createTestApp(): Promise<TestApp> {
   const moduleRef = await Test.createTestingModule({
     imports: [CoreModule],
   })
-    // подменяем только внешний мир (SMTP); Postgres и Redis — настоящие,
-    // потому что именно их поведение (сессии, rate-limit) мы и проверяем
     .overrideProvider(MailService)
     .useValue(mail)
     .compile();

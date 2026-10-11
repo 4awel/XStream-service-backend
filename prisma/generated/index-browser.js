@@ -130,6 +130,8 @@ exports.Prisma.UserScalarFieldEnum = {
   bio: 'bio',
   platform: 'platform',
   language: 'language',
+  theme: 'theme',
+  onboardingCompleted: 'onboardingCompleted',
   isEmailVerified: 'isEmailVerified',
   blocked: 'blocked',
   createdAt: 'createdAt',
@@ -142,8 +144,10 @@ exports.Prisma.ChannelScalarFieldEnum = {
   streamTitle: 'streamTitle',
   streamDescription: 'streamDescription',
   thumbnailUrl: 'thumbnailUrl',
+  bannerKey: 'bannerKey',
   primaryCategoryId: 'primaryCategoryId',
   isLive: 'isLive',
+  liveStartedAt: 'liveStartedAt',
   blocked: 'blocked',
   streamKeyHash: 'streamKeyHash',
   createdAt: 'createdAt',
@@ -246,6 +250,14 @@ exports.Prisma.EmailVerificationScalarFieldEnum = {
   attempts: 'attempts'
 };
 
+exports.Prisma.ChatMessagesScalarFieldEnum = {
+  id: 'id',
+  channelId: 'channelId',
+  userId: 'userId',
+  content: 'content',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -260,6 +272,11 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.Theme = exports.$Enums.Theme = {
+  DARK: 'DARK',
+  LIGHT: 'LIGHT'
+};
+
 exports.TagKind = exports.$Enums.TagKind = {
   CATEGORY: 'CATEGORY',
   GAME_MODE: 'GAME_MODE',
@@ -310,7 +327,8 @@ exports.Prisma.ModelName = {
   Emoji: 'Emoji',
   SubIcon: 'SubIcon',
   SubIconSelection: 'SubIconSelection',
-  EmailVerification: 'EmailVerification'
+  EmailVerification: 'EmailVerification',
+  ChatMessages: 'ChatMessages'
 };
 
 /**

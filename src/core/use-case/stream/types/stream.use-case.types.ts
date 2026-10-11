@@ -1,4 +1,3 @@
-/** Действия, которые MediaMTX присылает на проверку. */
 export const MEDIAMTX_ACTIONS = [
   "publish",
   "read",

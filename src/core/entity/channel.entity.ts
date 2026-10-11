@@ -6,8 +6,10 @@ export type ChannelProps = {
   thumbnailUrl: string | null;
   primaryCategoryId: string | null;
   streamHashKey: string | null;
+  bannerKey: string | null;
 
   isLive: boolean;
+  liveStartedAt: Date | null;
   blocked: boolean;
 
   createdAt: Date;
@@ -45,6 +47,10 @@ export class Channel {
     return this.props.isLive;
   }
 
+  public get liveStartedAt(): Date | null {
+    return this.props.liveStartedAt;
+  }
+
   public get blocked(): boolean {
     return this.props.blocked;
   }
@@ -55,6 +61,11 @@ export class Channel {
 
   public get updatedAt(): Date {
     return this.props.updatedAt;
+  }
+
+  /** Ключ объекта в S3, не URL. */
+  public get bannerKey(): string | null {
+    return this.props.bannerKey;
   }
 
   public get streamHashKey(): string | null {

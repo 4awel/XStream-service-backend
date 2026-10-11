@@ -12,10 +12,6 @@ import {
 
 const PASSWORD = "Str0ngPassw0rd!";
 
-/**
- * То же, что scripts/create-user-and-get-me.sh, только без рук:
- * POST /auth/register -> код из "письма" -> POST /auth/verify -> GET /user/me.
- */
 describe("Регистрация и /user/me (e2e)", () => {
   let app: INestApplication;
   let mail: FakeMailService;
@@ -23,7 +19,6 @@ describe("Регистрация и /user/me (e2e)", () => {
   let redis: RedisService;
   let close: () => Promise<void>;
 
-  // созданные почты — чтобы прибрать за собой в БД
   const createdEmails: string[] = [];
 
   beforeAll(async () => {
@@ -34,7 +29,6 @@ describe("Регистрация и /user/me (e2e)", () => {
     redis = ctx.redis;
     close = ctx.close;
 
-    // сбрасываем счётчики rate-limit, иначе несколько прогонов подряд упрутся в 429
     const keys = await redis.keys("rl:*");
     if (keys.length > 0) await redis.del(...keys);
   });

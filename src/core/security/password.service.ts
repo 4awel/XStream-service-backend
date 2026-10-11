@@ -29,6 +29,15 @@ function scryptAsync(
 /** Формат хэша: scrypt$N$r$p$salt(b64)$hash(b64) — параметры можно менять без миграции. */
 @Injectable()
 export class PasswordService {
+	readonly dummyHash: string = [
+		'scrypt',
+		N,
+		R,
+		P,
+		randomBytes(SALT_LENGTH).toString('base64'),
+		randomBytes(KEY_LENGTH).toString('base64'),
+	].join('$');
+
 	async hash(password: string): Promise<string> {
 		const salt = randomBytes(SALT_LENGTH);
 		const key = await scryptAsync(password, salt, {
