@@ -22,14 +22,13 @@ services:
         sync: false
       - key: APP_URL
         sync: false
+      # Внешний Postgres (Neon): на free-плане Render разрешена только одна база.
+      # Одна и та же строка в обе переменные: Prisma CLI читает POSTGRES_URL
+      # (prisma7.config.ts), приложение — DATABASE_URL.
       - key: DATABASE_URL
-        fromDatabase:
-          name: xstream-db
-          property: connectionString
+        sync: false
       - key: POSTGRES_URL
-        fromDatabase:
-          name: xstream-db
-          property: connectionString
+        sync: false
       - key: REDIS_URL
         fromService:
           type: keyvalue
@@ -117,9 +116,3 @@ services:
     # Пустой список — доступ только из сервисов Render.
     ipAllowList: []
 
-databases:
-  - name: xstream-db
-    plan: free
-    region: frankfurt
-    databaseName: stream_service
-    user: stream

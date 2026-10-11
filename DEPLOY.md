@@ -23,7 +23,10 @@ cookie туда не попадает. Из-за этого в чате на п�
 
 1. Закоммитить и запушить бэкенд на GitHub.
 2. Dashboard → New → Blueprint → выбрать репозиторий. Render создаст
-   `xstream-api`, `xstream-db` (Postgres) и `xstream-redis` (Key Value).
+   `xstream-api` и `xstream-redis` (Key Value). Postgres внешний (Neon):
+   на free-плане Render разрешена только одна база на аккаунт.
+   В Neon создать проект (регион Frankfurt), взять connection string и вписать
+   его в `DATABASE_URL` и `POSTGRES_URL`.
 3. Заполнить запрошенные переменные:
    - `ALLOWED_ORIGINS`, `APP_URL`: адрес фронта на Netlify (можно вписать после шага 3);
    - `SMTP_USER`, `SMTP_PASSWORD`, `MAIL_FROM`: из Brevo.
@@ -45,6 +48,4 @@ cookie туда не попадает. Из-за этого в чате на п�
 
 - Сервис на Render засыпает после 15 минут без запросов. Первый запрос после
   этого идёт около минуты.
-- Бесплатный Postgres на Render удаляется через 30 дней. Для долгой жизни
-  подключите Neon или Supabase: поменяйте `DATABASE_URL` и `POSTGRES_URL`.
 - Key Value на free-плане не сохраняется на диск: после рестарта все разлогинятся.
