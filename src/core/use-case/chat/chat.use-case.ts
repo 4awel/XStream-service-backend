@@ -4,13 +4,18 @@ import { randomUUID } from "node:crypto";
 import { SOCKET_EVENT } from "@/core/events/events";
 import { EventsGateway } from "@/core/events/events.gateway";
 import { RateLimitService } from "@/core/security/rate-limit.service";
-import { SendChatMessageInput } from "@/core/use-case/chat/types/chat.use-case.types";
+import {
+  ChatHistory,
+  LoadChatInput,
+  SendChatMessageInput,
+} from "@/core/use-case/chat/types/chat.use-case.types";
 import { IDataServices } from "@/core/repositories/data-service.repository";
 import { StatusResponse } from "@/core/user/dto/user.dto";
 
 const MAX_TEXT_LENGTH = 500;
 const CHAT_LIMIT = 10;
 const CHAT_WINDOW_SEC = 10;
+const HISTORY_DEFAULT_LIMIT = 50;
 
 @Injectable()
 export class ChatUseCase {
@@ -63,7 +68,7 @@ export class ChatUseCase {
       throw new NotFoundException("sendMessage: user not found");
     }
 
-    if (!user.blocked && !channel.blocked) {
+    if (user.blocked || channel.blocked) {
       return {
         status: 403,
         message: "sendMessage: user or channel is blocked",
@@ -84,5 +89,35 @@ export class ChatUseCase {
       text,
       createdAt: new Date().toISOString(),
     });
+  }
+
+  async loadMessages(input: LoadChatInput): Promise<ChatHistory> {
+    const channel = await this.dataService.channel.findByChannelId(input.channelId);
+
+    if (!channel) {
+      throw new NotFoundException("loadMessages: channel not found");
+    }
+
+    const limit = input.limit ?? HISTORY_DEFAULT_LIMIT;
+    // Берём на одно больше: лишнее сообщение означает, что есть страница старше.
+    const messages = await this.dataService.chat.loadMessages(
+      input.channelId,
+      limit + 1,
+      input.before,
+    );
+    const hasMore = messages.length > limit;
+    const page = hasMore ? messages.slice(1) : messages;
+
+    return {
+      items: page.map((message) => ({
+        id: message.id,
+        channelId: message.channelId,
+        userId: message.userId,
+        username: message.username,
+        text: message.text,
+        createdAt: message.createdAt.toISOString(),
+      })),
+      hasMore,
+    };
   }
 }

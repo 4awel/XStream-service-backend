@@ -2,10 +2,8 @@ import { Injectable } from "@nestjs/common";
 
 import { Tag } from "@/core/entity/tag.entity";
 import { PrismaService } from "@/core/prisma/prisma.service";
-import {
-  ListTagsQuery,
-  TagRepository,
-} from "@/core/repositories/abstracts/tag.repository";
+import { ListTagsQuery } from "@/core/repositories/abstracts/props/tag.props";
+import { TagRepository } from "@/core/repositories/abstracts/tag.repository";
 import type { Tag as PrismaTag } from "@prisma/generated";
 
 const toTag = (row: PrismaTag): Tag =>
